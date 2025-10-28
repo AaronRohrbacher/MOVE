@@ -6,6 +6,7 @@
 //
 
 import Cocoa
+import ApplicationServices
 
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -14,7 +15,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        // Insert code here to initialize your application
+        // Request accessibility permissions
+        requestAccessibilityPermissions()
+    }
+    
+    private func requestAccessibilityPermissions() {
+        // Trigger the accessibility permission prompt
+        // This adds the app to System Settings > Privacy & Security > Accessibility
+        let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
+        let trusted = AXIsProcessTrustedWithOptions(options)
+        
+        if !trusted {
+            print("Please enable accessibility permissions in System Settings")
+        }
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
