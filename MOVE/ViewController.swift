@@ -24,7 +24,7 @@ struct WindowInfo: Codable {
     let isMinimized: Bool
     let isHidden: Bool
     let windowNumber: CGWindowID
-    let isDesktopIcon: Bool  // Track if this was a desktop icon (small Finder window)
+    let isDesktopIcon: Bool
 }
 
 struct DesktopIconInfo: Codable {
@@ -46,7 +46,6 @@ class ViewController: NSViewController {
     @IBOutlet weak var layoutsScrollView: NSScrollView?
     @IBOutlet weak var layoutsTableView: NSTableView?
     
-    // Permissions UI - will create programmatically since storyboard is complex
     var permissionsBanner: NSView?
     private var permissionsLabel: NSTextField?
     private var permissionsButton: NSButton?
@@ -54,6 +53,13 @@ class ViewController: NSViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if ProcessInfo.processInfo.arguments.contains("--clear-user-defaults") {
+            UserDefaults.standard.removeObject(forKey: layoutsKey)
+            UserDefaults.standard.synchronize()
+            savedLayouts = []
+        }
+        
         loadSavedLayouts()
         setupUI()
         createPermissionsBanner()
@@ -61,9 +67,7 @@ class ViewController: NSViewController {
     
     override func viewDidAppear() {
         super.viewDidAppear()
-        // Just check and update UI, don't prompt again (already done in AppDelegate)
         checkPermissionsAndUpdateUI()
-        // Start timer to periodically check permissions - less frequently to avoid hanging
         permissionsTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { [weak self] _ in
             guard let self = self else { return }
             self.checkPermissionsAndUpdateUI()
@@ -94,30 +98,25 @@ class ViewController: NSViewController {
     }
     
     private func createPermissionsBanner() {
-        // Create red banner for permissions warning
         let banner = NSView()
         banner.translatesAutoresizingMaskIntoConstraints = false
         banner.wantsLayer = true
         banner.layer?.backgroundColor = NSColor.systemRed.cgColor
         
-        // Create label
         let label = NSTextField(labelWithString: "Accessibility permissions are required to move windows")
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .white
         label.font = NSFont.systemFont(ofSize: 13)
         banner.addSubview(label)
         
-        // Create button to open settings
         let button = NSButton(title: "Open Accessibility Settings", target: self, action: #selector(openAccessibilitySettings))
         button.translatesAutoresizingMaskIntoConstraints = false
         button.bezelStyle = .rounded
         banner.addSubview(button)
         
-        // Initially hide the banner
         banner.isHidden = true
         view.addSubview(banner)
         
-        // Set up constraints
         NSLayoutConstraint.activate([
             banner.topAnchor.constraint(equalTo: view.topAnchor),
             banner.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -137,24 +136,21 @@ class ViewController: NSViewController {
     }
     
     @objc private func openAccessibilitySettings() {
-        // Open System Settings to Accessibility pane
-        // For macOS 13.0+ (Ventura and later), use the new URL scheme
         if #available(macOS 13.0, *) {
-            let url = URL(string: "x-apple.systempreferences:com.apple.settings.PrivacySecurity.extension?Privacy_Accessibility")!
-            NSWorkspace.shared.open(url)
+            if let url = URL(string: "x-apple.systempreferences:com.apple.settings.PrivacySecurity.extension?Privacy_Accessibility") {
+                NSWorkspace.shared.open(url)
+            }
         } else {
-            // For older macOS versions
-            let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!
-            NSWorkspace.shared.open(url)
+            if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility") {
+                NSWorkspace.shared.open(url)
+            }
         }
     }
     
     private func checkPermissionsAndUpdateUI() {
-        // Check if we have accessibility permissions (no prompt)
         let checkOpts = [kAXTrustedCheckOptionPrompt.takeRetainedValue() as String: false] as CFDictionary
         let hasPermission = AXIsProcessTrustedWithOptions(checkOpts)
         
-        // Update UI based on permission state
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             self.permissionsBanner?.isHidden = hasPermission
@@ -183,7 +179,6 @@ class ViewController: NSViewController {
         var windows: [WindowInfo] = []
         let myPID = getpid()
         
-        // Request screen recording permission if needed
         if !CGPreflightScreenCaptureAccess() {
             CGRequestScreenCaptureAccess()
         }
@@ -196,10 +191,8 @@ class ViewController: NSViewController {
         for windowDict in windowList {
             guard
                 let pid = windowDict[kCGWindowOwnerPID as String] as? pid_t,
-                pid != myPID, // Skip our own app's windows
+                pid != myPID,
                 let windowNumber = windowDict[kCGWindowNumber as String] as? CGWindowID,
-                let windowLayer = windowDict[kCGWindowLayer as String] as? Int, 
-                windowLayer == 0, // Only normal windows
                 let bounds = windowDict[kCGWindowBounds as String] as? [String: Any],
                 let x = bounds["X"] as? CGFloat,
                 let y = bounds["Y"] as? CGFloat,
@@ -209,25 +202,19 @@ class ViewController: NSViewController {
             else { continue }
             
             let windowTitle = (windowDict[kCGWindowName as String] as? String) ?? ""
+            let windowLayer = windowDict[kCGWindowLayer as String] as? Int ?? 0
             
-            // Skip windows without titles and very small windows (except for Finder desktop icons)
-            let isDesktopIcon = ownerName == "Finder" && width < 100 && height < 100 && !windowTitle.isEmpty
+            // Filter out non-windows (desktop icons are now handled via plist)
+            if windowLayer != 0 { continue }
+            if windowTitle.isEmpty { continue }
+            if width < 100 || height < 100 { continue }
             
-            // Skip desktop icons if not requested
-            if isDesktopIcon && !includeDesktopIcons { continue }
-            
-            if windowTitle.isEmpty && !isDesktopIcon { continue }
-            if !isDesktopIcon && (width < 100 || height < 100) { continue }
-            
-            // Get bundle identifier for the app
             var bundleId = ""
             let runningApps = NSWorkspace.shared.runningApplications
             if let app = runningApps.first(where: { $0.processIdentifier == pid }) {
                 bundleId = app.bundleIdentifier ?? ownerName
             }
             
-            // CGWindowListCopyWindowInfo returns coordinates with origin at top-left
-            // AX API also uses top-left origin, so no conversion needed
             let frame = CGRect(x: x, y: y, width: width, height: height)
             
             windows.append(WindowInfo(
@@ -237,55 +224,102 @@ class ViewController: NSViewController {
                 isMinimized: false,
                 isHidden: false,
                 windowNumber: windowNumber,
-                isDesktopIcon: isDesktopIcon
+                isDesktopIcon: false
             ))
             
-            print("Captured window: \(windowTitle) (\(ownerName)) - \(frame) - Desktop icon: \(isDesktopIcon)")
+            print("Captured window: \(windowTitle) (\(ownerName)) - \(frame)")
         }
         
         return windows
     }
     
     // MARK: - Desktop Icon Capture
-    private func captureDesktopIcons() -> [DesktopIconInfo] {
-        // This is a placeholder - actual desktop icon positions would require
-        // more complex Finder scripting or private APIs
-        var desktopIcons: [DesktopIconInfo] = []
-        let homeDirectory = FileManager.default.homeDirectoryForCurrentUser
-        let desktopPath = homeDirectory.appendingPathComponent("Desktop")
+    private func captureDesktopIcons(from windows: [WindowInfo]) -> [DesktopIconInfo] {
+        print("\n=== CAPTURING DESKTOP ICONS ===")
         
-        if let items = try? FileManager.default.contentsOfDirectory(at: desktopPath, includingPropertiesForKeys: nil) {
-            for item in items where !item.lastPathComponent.hasPrefix(".") {
-                desktopIcons.append(DesktopIconInfo(name: item.lastPathComponent, position: .zero))
+        var icons: [DesktopIconInfo] = []
+        
+        // Get list of files on desktop to match against windows
+        let desktopPath = NSHomeDirectory() + "/Desktop"
+        let desktopFiles = (try? FileManager.default.contentsOfDirectory(atPath: desktopPath))?.filter { !$0.hasPrefix(".") } ?? []
+        print("Found \(desktopFiles.count) files on desktop")
+        
+        // Use CGWindowListCopyWindowInfo like getAllWindows() method
+        let options = CGWindowListOption.optionOnScreenOnly
+        guard let windowListInfo = CGWindowListCopyWindowInfo(options, CGWindowID(0)),
+              let windowArray = windowListInfo as? [[String: Any]] else {
+            print("Failed to get window list for desktop icons")
+            return []
+        }
+        
+        print("Scanning \(windowArray.count) windows for desktop icons...")
+        
+        for window in windowArray {
+            if let ownerName = window[kCGWindowOwnerName as String] as? String,
+               ownerName != "Window Server" && ownerName != "Dock",
+               let bounds = window[kCGWindowBounds as String] as? [String: Any],
+               let x = bounds["X"] as? CGFloat,
+               let y = bounds["Y"] as? CGFloat,
+               let width = bounds["Width"] as? CGFloat,
+               let height = bounds["Height"] as? CGFloat {
+                
+                let windowTitle = (window[kCGWindowName as String] as? String) ?? ""
+                
+                // Only save windows that are reasonably sized (like getAllWindows)
+                if width > 50 && height > 50 {
+                    // Desktop icons are small windows
+                    if width < 100 && height < 100 {
+                        // Check if window title matches a desktop file
+                        let matchesDesktopFile = desktopFiles.contains { $0 == windowTitle }
+                        
+                        // Desktop icons: small windows with titles that match desktop files, or Finder windows with titles below menu bar
+                        if matchesDesktopFile || (ownerName == "Finder" && !windowTitle.isEmpty && y > 100) {
+                            print("  → Captured desktop icon: \(windowTitle) (\(ownerName)) at (\(x), \(y))")
+                            icons.append(DesktopIconInfo(name: windowTitle, position: CGPoint(x: x, y: y)))
+                        } else if width < 100 && height < 100 && !windowTitle.isEmpty {
+                            print("  Skipped small window: title='\(windowTitle)' owner='\(ownerName)' size: \(width)x\(height) at (\(x), \(y))")
+                        }
+                    }
+                }
             }
         }
-        return desktopIcons
+        
+        print("\n=== CAPTURE COMPLETE: \(icons.count) desktop icons ===")
+        return icons
     }
     
     // MARK: - Actions
     @objc func saveLayout() {
-        // Always show the dialog first, then check permissions when actually saving
         showSaveLayoutPopup { [weak self] name, includeDesktopIcons in
             guard let self = self, !name.isEmpty else { return }
             
-            // Check permissions before trying to capture
             let checkOpts = [kAXTrustedCheckOptionPrompt.takeRetainedValue() as String: false] as CFDictionary
             if !AXIsProcessTrustedWithOptions(checkOpts) {
                 print("Cannot save layout: Accessibility permissions not granted")
                 return
             }
             
-            // Capture current window layout
-            let windows = self.captureCurrentLayout(includeDesktopIcons: includeDesktopIcons)
+            // Capture regular windows
+            let windows = self.captureCurrentLayout(includeDesktopIcons: false)
             
-            if windows.isEmpty {
-                print("No windows found to save")
-                return
-            }
-            
+            // Capture desktop icons separately from plist if requested
             var desktopIcons: [DesktopIconInfo]? = nil
             if includeDesktopIcons {
-                desktopIcons = self.captureDesktopIcons()
+                print("\n*** USER CHECKED 'Include desktop icons' ***")
+                desktopIcons = self.captureDesktopIcons(from: [])
+                print("*** SAVED \(desktopIcons?.count ?? 0) DESKTOP ICONS TO LAYOUT ***")
+                if let icons = desktopIcons {
+                    for icon in icons {
+                        print("  - \(icon.name) at (\(icon.position.x), \(icon.position.y))")
+                    }
+                }
+            } else {
+                print("\n*** USER DID NOT CHECK 'Include desktop icons' ***")
+            }
+            
+            if windows.isEmpty && (desktopIcons?.isEmpty ?? true) {
+                print("No windows or desktop icons found to save")
+                return
             }
             
             let layout = LayoutData(
@@ -305,15 +339,13 @@ class ViewController: NSViewController {
     }
     
     @objc private func applyLayout() {
-        // Check accessibility permission - should have been prompted at startup
         let checkOpts = [kAXTrustedCheckOptionPrompt.takeRetainedValue() as String: false] as CFDictionary
         if !AXIsProcessTrustedWithOptions(checkOpts) {
             print("Cannot apply layout: Accessibility permissions not granted")
             return
         }
         
-    // Get selected layout
-    var row = layoutsTableView?.selectedRow ?? -1
+        var row = layoutsTableView?.selectedRow ?? -1
     if row < 0 && !savedLayouts.isEmpty {
         row = 0
         layoutsTableView?.selectRowIndexes(IndexSet(integer: 0), byExtendingSelection: false)
@@ -334,7 +366,6 @@ class ViewController: NSViewController {
         if row < 0 && !savedLayouts.isEmpty { row = 0 }
         guard row >= 0 && row < savedLayouts.count else { return }
         
-        // Just delete without confirmation
         savedLayouts.remove(at: row)
         saveLayouts()
         layoutsTableView?.reloadData()
@@ -344,7 +375,6 @@ class ViewController: NSViewController {
     private func restoreLayout(_ layout: LayoutData) {
         print("Starting layout restoration for: \(layout.name)")
         
-        // First, launch any apps that aren't running
         let runningApps = NSWorkspace.shared.runningApplications
         let runningBundleIds = Set(runningApps.compactMap { $0.bundleIdentifier })
         
@@ -355,7 +385,6 @@ class ViewController: NSViewController {
             }
         }
         
-        // Launch missing apps
         for bundleId in appsToLaunch {
             print("Launching app: \(bundleId)")
             if let appURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleId) {
@@ -369,14 +398,21 @@ class ViewController: NSViewController {
             }
         }
         
-        // Wait a moment for apps to launch, then restore windows
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
+            // Restore regular windows
             for window in layout.windows {
                 self?.restoreWindow(window)
             }
             
+            // Restore desktop icons separately if they were included
             if layout.includeDesktopIcons, let icons = layout.desktopIcons {
+                print("\n*** LAYOUT HAS \(icons.count) DESKTOP ICONS TO RESTORE ***")
+                for icon in icons {
+                    print("  - \(icon.name) at (\(icon.position.x), \(icon.position.y))")
+                }
                 self?.restoreDesktopIcons(icons)
+            } else {
+                print("\n*** NO DESKTOP ICONS IN THIS LAYOUT ***")
             }
             
             print("Layout restoration complete.")
@@ -386,7 +422,6 @@ class ViewController: NSViewController {
     private func restoreWindow(_ savedWindow: WindowInfo) {
         print("Restoring window: \(savedWindow.windowTitle) to \(savedWindow.frame)")
         
-        // Find the app by bundle identifier
         let runningApps = NSWorkspace.shared.runningApplications
         guard let app = runningApps.first(where: { 
             $0.bundleIdentifier == savedWindow.bundleIdentifier ||
@@ -396,18 +431,14 @@ class ViewController: NSViewController {
             return
         }
         
-        // Skip if it's our own app
         if app.processIdentifier == getpid() {
             return
         }
         
-        // Get the AXUIElement for the app
         let appElement = AXUIElementCreateApplication(app.processIdentifier)
         
-        // Try to find and move the window
         var success = false
         
-        // First try to match by window title
         if !savedWindow.windowTitle.isEmpty {
             success = moveWindowByTitle(appElement: appElement, 
                                        title: savedWindow.windowTitle, 
@@ -415,7 +446,17 @@ class ViewController: NSViewController {
                                        isDesktopIcon: savedWindow.isDesktopIcon)
         }
         
-        // If that didn't work and it's not a desktop icon, try to move any window of the app
+        if !success && savedWindow.isDesktopIcon {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+                if !savedWindow.windowTitle.isEmpty {
+                    _ = self?.moveWindowByTitle(appElement: appElement,
+                                               title: savedWindow.windowTitle,
+                                               to: savedWindow.frame,
+                                               isDesktopIcon: savedWindow.isDesktopIcon)
+                }
+            }
+        }
+        
         if !success && !savedWindow.isDesktopIcon {
             success = moveFirstWindow(of: appElement, to: savedWindow.frame)
         }
@@ -433,21 +474,22 @@ class ViewController: NSViewController {
             return false
         }
         
-        // For desktop icons (small Finder windows), we need special handling
         if isDesktopIcon {
-            // Match desktop icons by title (filename) 
+            // Desktop icons are small Finder windows - find by title
             for window in windows {
                 var titleRef: CFTypeRef?
                 if AXUIElementCopyAttributeValue(window, kAXTitleAttribute as CFString, &titleRef) == .success,
                    let windowTitle = titleRef as? String,
-                   windowTitle == title,
-                   let currentSize = getWindowSize(window),
-                   currentSize.width < 100 && currentSize.height < 100 {
-                    return setWindowFrame(window, frame: frame)
+                   windowTitle == title {
+                    // Verify it's a desktop icon (small size)
+                    if let currentSize = getWindowSize(window),
+                       currentSize.width < 100 && currentSize.height < 100 {
+                        return setWindowFrame(window, frame: frame)
+                    }
                 }
             }
         } else {
-            // Try exact title match first
+            // Regular windows - try exact match first
             for window in windows {
                 var titleRef: CFTypeRef?
                 if AXUIElementCopyAttributeValue(window, kAXTitleAttribute as CFString, &titleRef) == .success,
@@ -457,7 +499,7 @@ class ViewController: NSViewController {
                 }
             }
             
-            // Try fuzzy match
+            // Try partial match if exact match fails
             for window in windows {
                 var titleRef: CFTypeRef?
                 if AXUIElementCopyAttributeValue(window, kAXTitleAttribute as CFString, &titleRef) == .success,
@@ -473,7 +515,6 @@ class ViewController: NSViewController {
     }
     
     private func moveFirstWindow(of appElement: AXUIElement, to frame: CGRect) -> Bool {
-        // Try to get the main window
         var mainWindowRef: CFTypeRef?
         if AXUIElementCopyAttributeValue(appElement, kAXMainWindowAttribute as CFString, &mainWindowRef) == .success,
            let mainWindow = mainWindowRef as! AXUIElement? {
@@ -482,7 +523,6 @@ class ViewController: NSViewController {
             }
         }
         
-        // Try to get the focused window
         var focusedWindowRef: CFTypeRef?
         if AXUIElementCopyAttributeValue(appElement, kAXFocusedWindowAttribute as CFString, &focusedWindowRef) == .success,
            let focusedWindow = focusedWindowRef as! AXUIElement? {
@@ -491,7 +531,6 @@ class ViewController: NSViewController {
             }
         }
         
-        // Try to get any window
         var windowsRef: CFTypeRef?
         if AXUIElementCopyAttributeValue(appElement, kAXWindowsAttribute as CFString, &windowsRef) == .success,
            let windows = windowsRef as? [AXUIElement],
@@ -515,7 +554,6 @@ class ViewController: NSViewController {
     }
     
     private func setWindowFrame(_ window: AXUIElement, frame: CGRect) -> Bool {
-        // Check if attributes are settable
         var positionSettable: DarwinBoolean = false
         var sizeSettable: DarwinBoolean = false
         
@@ -527,7 +565,6 @@ class ViewController: NSViewController {
             return false
         }
         
-        // Set position
         var position = frame.origin
         if let positionValue = AXValueCreate(.cgPoint, &position) {
             let posResult = AXUIElementSetAttributeValue(window, kAXPositionAttribute as CFString, positionValue)
@@ -537,7 +574,6 @@ class ViewController: NSViewController {
             }
         }
         
-        // Set size
         var size = frame.size
         if let sizeValue = AXValueCreate(.cgSize, &size) {
             let sizeResult = AXUIElementSetAttributeValue(window, kAXSizeAttribute as CFString, sizeValue)
@@ -552,8 +588,39 @@ class ViewController: NSViewController {
     }
     
     private func restoreDesktopIcons(_ icons: [DesktopIconInfo]) {
-        // This would require AppleScript or private APIs to actually position desktop icons
-        print("Restoring \(icons.count) desktop icons (positions not implemented)")
+        print("\n=== RESTORING DESKTOP ICONS ===")
+        print("Number of icons to restore: \(icons.count)")
+        
+        // Desktop icons are small Finder windows - use Accessibility API to move them
+        guard let finderApp = NSWorkspace.shared.runningApplications.first(where: { 
+            $0.bundleIdentifier == "com.apple.finder" 
+        }) else {
+            print("Finder not running")
+            return
+        }
+        
+        let appElement = AXUIElementCreateApplication(finderApp.processIdentifier)
+        
+        for icon in icons {
+            print("Restoring desktop icon: \(icon.name) to (\(icon.position.x), \(icon.position.y))")
+            
+            // Use the same moveWindowByTitle method but with isDesktopIcon flag
+            let frame = CGRect(origin: icon.position, size: CGSize(width: 80, height: 80))
+            let success = moveWindowByTitle(
+                appElement: appElement,
+                title: icon.name,
+                to: frame,
+                isDesktopIcon: true
+            )
+            
+            if success {
+                print("  ✓ Successfully restored \(icon.name)")
+            } else {
+                print("  ✗ Failed to restore \(icon.name)")
+            }
+        }
+        
+        print("\n=== RESTORE COMPLETE: \(icons.count) desktop icons ===")
     }
     
     // MARK: - UI Helpers
@@ -579,7 +646,6 @@ class ViewController: NSViewController {
         alert.addButton(withTitle: "Save")
         alert.addButton(withTitle: "Cancel")
         
-        // Make the text field first responder
         alert.window.initialFirstResponder = nameField
         
         if alert.runModal() == .alertFirstButtonReturn {
@@ -608,7 +674,6 @@ extension ViewController: NSTableViewDelegate {
         textField.lineBreakMode = .byTruncatingTail
         cell.addSubview(textField)
         
-        // Add subtitle with window count
         let subtitleText = "\(layout.windows.count) windows"
         let subtitle = NSTextField(labelWithString: subtitleText)
         subtitle.translatesAutoresizingMaskIntoConstraints = false
