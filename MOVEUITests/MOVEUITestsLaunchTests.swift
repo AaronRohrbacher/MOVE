@@ -8,9 +8,8 @@
 import XCTest
 
 final class MOVEUITestsLaunchTests: XCTestCase {
-
-    override class var runsForEachTargetApplicationUIConfiguration: Bool {
-        false  // Run once, not multiple times
+    override static var runsForEachTargetApplicationUIConfiguration: Bool {
+        false // Run once, not multiple times
     }
 
     override func setUpWithError() throws {
