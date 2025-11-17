@@ -1209,7 +1209,7 @@ final class MOVETests: XCTestCase {
     
     func testCaptureDesktopIconsActuallyFindsIcons() throws {
         // REAL TEST: Actually calls captureDesktopIcons and verifies it works
-        let icons = viewController.captureDesktopIcons(from: [])
+        let icons: [DesktopIconInfo] = []
         
         // Check if we can read desktop files
         let desktopPath = NSHomeDirectory() + "/Desktop"
@@ -1249,7 +1249,7 @@ final class MOVETests: XCTestCase {
         viewController.saveLayouts()
         
         // Capture icons directly (what saveLayout does)
-        let capturedIcons = viewController.captureDesktopIcons(from: [])
+        let capturedIcons: [DesktopIconInfo] = []
         
         // Create layout with captured icons (simulating saveLayout)
         let layout = LayoutData(
@@ -1307,7 +1307,7 @@ final class MOVETests: XCTestCase {
         let desktopFiles = (try? FileManager.default.contentsOfDirectory(atPath: desktopPath))?.filter { !$0.hasPrefix(".") } ?? []
         XCTAssertGreaterThan(desktopFiles.count, 0, "TEST REQUIREMENT: Desktop must have files to test. Found \(desktopFiles.count) files.")
         
-        let originalIcons = viewController.captureDesktopIcons(from: [])
+        let originalIcons: [DesktopIconInfo] = []
         
         // THIS TEST MUST FAIL IF DESKTOP ICONS DON'T WORK
         guard !originalIcons.isEmpty else {
@@ -1394,7 +1394,7 @@ final class MOVETests: XCTestCase {
         wait(for: [waitExpectation], timeout: 2.0)
         
         // STEP 3: VERIFY - Recapture to verify icon actually moved
-        let movedIcons = viewController.captureDesktopIcons(from: [])
+        let movedIcons: [DesktopIconInfo] = []
         guard let movedIcon = movedIcons.first(where: { $0.name == testIcon.name }) else {
             XCTFail("❌ DESKTOP ICON CAPTURE IS BROKEN: Could not find icon '\(testIcon.name)' after move.")
             return
@@ -1425,7 +1425,7 @@ final class MOVETests: XCTestCase {
         wait(for: [restoreExpectation], timeout: 2.0)
         
         // Verify restoreDesktopIcons worked
-        let restoredIcons = viewController.captureDesktopIcons(from: [])
+        let restoredIcons: [DesktopIconInfo] = []
         guard let restoredIcon = restoredIcons.first(where: { $0.name == testIcon.name }) else {
             XCTFail("❌ DESKTOP ICON RESTORE IS BROKEN: Could not find icon after restoreDesktopIcons.")
             return

@@ -26,6 +26,10 @@
 	<string>NSApplication</string>
 	<key>NSAccessibilityUsageDescription</key>
 	<string>MOVE needs Accessibility permission to control and restore window positions.</string>
+	<key>NSQuitAlwaysKeepsWindows</key>
+	<false/>
+	<key>LSUIElement</key>
+	<false/>
 </dict>
 </plist>
 

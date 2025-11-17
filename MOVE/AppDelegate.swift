@@ -14,7 +14,21 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
 
 
+    func applicationWillFinishLaunching(_ notification: Notification) {
+        // Disable state restoration BEFORE windows are created
+        UserDefaults.standard.set(false, forKey: "NSQuitAlwaysKeepsWindows")
+        UserDefaults.standard.synchronize()
+        
+        // Disable persistent UI state restoration completely
+        // This prevents flushAllChanges spam
+        if let persistentUIManager = NSApplication.shared.value(forKey: "persistentUIManager") as? NSObject {
+            persistentUIManager.perform(Selector(("setEnabled:")), with: false)
+        }
+    }
+    
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        print("AppDelegate: applicationDidFinishLaunching called")
+        
         if ProcessInfo.processInfo.arguments.contains("--clear-user-defaults") {
             UserDefaults.standard.removeObject(forKey: "SavedLayouts")
             UserDefaults.standard.synchronize()
@@ -25,7 +39,40 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             UserDefaults.standard.synchronize()
         }
         
+        print("AppDelegate: Requesting accessibility permissions...")
         requestAccessibilityPermissions()
+        
+        // Disable state restoration on all windows to prevent flushAllChanges spam
+        DispatchQueue.main.async {
+            for window in NSApplication.shared.windows {
+                window.restorationClass = nil
+                window.isRestorable = false
+            }
+        }
+        
+        // Ensure the main window is shown
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            // Try to get window from storyboard
+            if let storyboard = NSStoryboard.main,
+               let windowController = storyboard.instantiateInitialController() as? NSWindowController {
+                print("AppDelegate: Found window controller from storyboard")
+                windowController.window?.restorationClass = nil
+                windowController.window?.isRestorable = false
+                windowController.showWindow(nil)
+                windowController.window?.makeKeyAndOrderFront(nil)
+                NSApp.activate(ignoringOtherApps: true)
+            } else if let window = NSApplication.shared.windows.first {
+                print("AppDelegate: Found window, making it key and ordering front")
+                window.restorationClass = nil
+                window.isRestorable = false
+                window.makeKeyAndOrderFront(nil)
+                NSApp.activate(ignoringOtherApps: true)
+            } else {
+                print("AppDelegate: No windows found")
+            }
+        }
+        
+        print("AppDelegate: applicationDidFinishLaunching completed")
     }
     
     private func requestAccessibilityPermissions() {
@@ -39,85 +86,41 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationWillTerminate(_ aNotification: Notification) {
     }
+    
+    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+        // Always keep app running in background - just hide windows
+        // This allows hotkeys to continue working
+        for window in NSApplication.shared.windows {
+            window.orderOut(nil)
+        }
+        return .terminateCancel
+    }
 
     func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
+        return false  // Disable state restoration to prevent flushAllChanges spam
+    }
+    
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        // If the app is reopened (e.g., dock click) and no windows are visible, show the main window
+        if !flag {
+            if let window = NSApplication.shared.windows.first {
+                window.makeKeyAndOrderFront(nil)
+                NSApp.activate(ignoringOtherApps: true)
+            }
+        }
         return true
     }
-
-    // MARK: - Core Data stack
-
-    lazy var persistentContainer: NSPersistentCloudKitContainer = {
-        let container = NSPersistentCloudKitContainer(name: "MOVE")
-        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
-            if let error = error {
-                fatalError("Unresolved error \(error)")
-            }
-        })
-        return container
-    }()
-
-    // MARK: - Core Data Saving and Undo support
-
-    func save() {
-        let context = persistentContainer.viewContext
-
-        if !context.commitEditing() {
-            NSLog("\(NSStringFromClass(type(of: self))) unable to commit editing before saving")
-        }
-        if context.hasChanges {
-            do {
-                try context.save()
-            } catch {
-                let nserror = error as NSError
-                NSApplication.shared.presentError(nserror)
-            }
+    
+    func applicationDidBecomeActive(_ notification: Notification) {
+        // Ensure window is visible when app becomes active
+        if let window = NSApplication.shared.windows.first, !window.isVisible {
+            print("AppDelegate: Window not visible, showing it")
+            window.makeKeyAndOrderFront(nil)
         }
     }
 
-    func windowWillReturnUndoManager(window: NSWindow) -> UndoManager? {
-        return persistentContainer.viewContext.undoManager
-    }
-
-    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
-        let context = persistentContainer.viewContext
-        
-        if !context.commitEditing() {
-            NSLog("\(NSStringFromClass(type(of: self))) unable to commit editing to terminate")
-            return .terminateCancel
-        }
-        
-        if !context.hasChanges {
-            return .terminateNow
-        }
-        
-        do {
-            try context.save()
-        } catch {
-            let nserror = error as NSError
-
-            // Customize this code block to include application-specific recovery steps.
-            let result = sender.presentError(nserror)
-            if (result) {
-                return .terminateCancel
-            }
-            
-            let question = NSLocalizedString("Could not save changes while quitting. Quit anyway?", comment: "Quit without saves error question message")
-            let info = NSLocalizedString("Quitting now will lose any changes you have made since the last successful save", comment: "Quit without saves error question info");
-            let quitButton = NSLocalizedString("Quit anyway", comment: "Quit anyway button title")
-            let cancelButton = NSLocalizedString("Cancel", comment: "Cancel button title")
-            let alert = NSAlert()
-            alert.messageText = question
-            alert.informativeText = info
-            alert.addButton(withTitle: quitButton)
-            alert.addButton(withTitle: cancelButton)
-            
-            let answer = alert.runModal()
-            if answer == .alertSecondButtonReturn {
-                return .terminateCancel
-            }
-        }
-        return .terminateNow
-    }
+    // Core Data removed - app uses UserDefaults for persistence
+    // This reduces system activity and CoreAnalytics spam at launch
 
 }
 

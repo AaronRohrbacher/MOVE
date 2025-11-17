@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="24412" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
-        <deployment identifier="macosx"/>
+        <deployment version="101400" identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24412"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -689,7 +689,7 @@
                     <window key="window" title="MOVE" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" titleVisibility="hidden" id="IQv-IB-iLA">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-                        <rect key="contentRect" x="196" y="240" width="480" height="270"/>
+                        <rect key="contentRect" x="196" y="240" width="680" height="360"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="3360" height="1859"/>
                         <connections>
                             <outlet property="delegate" destination="B8D-0N-5wS" id="98r-iN-zZc"/>
@@ -706,42 +706,48 @@
         <!--MOVE-->
         <scene sceneID="Q7g-JO-DND">
             <objects>
-                <viewController title="MOVE" storyboardIdentifier="ViewController" id="hIl-yz-18R" customClass="ViewController" customModule="MOVE" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" id="r7d-et-ARg">
-                        <rect key="frame" x="0.0" y="0.0" width="594" height="401"/>
+                <viewController title="MOVE" storyboardIdentifier="ViewController" showSeguePresentationStyle="single" id="hIl-yz-18R" customClass="ViewController" customModule="MOVE" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" wantsLayer="YES" id="r7d-et-ARg">
+                        <rect key="frame" x="0.0" y="0.0" width="794" height="527"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gcj-t4-rut">
-                                <rect key="frame" x="20" y="194" width="103" height="24"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LAX-i3-BI2">
+                                <rect key="frame" x="20" y="436" width="71" height="71"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="74" id="NFt-HS-faY"/>
+                                    <constraint firstAttribute="width" constant="75" id="iIk-px-M2m"/>
+                                </constraints>
+                                <imageCell key="cell" alignment="center" animates="YES" imageAlignment="left" image="NSApplicationIcon" id="0ZA-R2-IL6"/>
+                            </imageView>
+                            <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gcj-t4-rut">
+                                <rect key="frame" x="36" y="24" width="103" height="24"/>
                                 <buttonCell key="cell" type="push" title="Apply Layout" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="4g3-TG-cwu">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
+                                <color key="bezelColor" name="AccentColor"/>
                             </button>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FaE-MX-YLc">
-                                <rect key="frame" x="194" y="194" width="108" height="24"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FaE-MX-YLc">
+                                <rect key="frame" x="292" y="24" width="108" height="24"/>
                                 <buttonCell key="cell" type="push" title="Delete Layout" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="LAi-Vb-UBQ">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <color key="bezelColor" name="systemRedColor" catalog="System" colorSpace="catalog"/>
                             </button>
-                            <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" scrollerKnobStyle="dark" translatesAutoresizingMaskIntoConstraints="NO" id="Kah-V6-SZR">
-                                <rect key="frame" x="20" y="229" width="282" height="152"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <scrollView misplaced="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" scrollerKnobStyle="dark" translatesAutoresizingMaskIntoConstraints="NO" id="Kah-V6-SZR">
+                                <rect key="frame" x="36" y="60" width="364" height="315"/>
                                 <clipView key="contentView" autoresizesSubviews="NO" drawsBackground="NO" id="O3T-Vc-dwl">
-                                    <rect key="frame" x="1" y="1" width="280" height="150"/>
+                                    <rect key="frame" x="1" y="1" width="362" height="313"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="layouts-table-view">
-                                            <rect key="frame" x="0.0" y="0.0" width="280" height="150"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="362" height="313"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <tableColumns>
-                                                <tableColumn identifier="layoutName" width="250" minWidth="40" maxWidth="1000" id="layout-name-column">
+                                                <tableColumn identifier="layoutName" width="200" minWidth="40" maxWidth="1000" id="layout-name-column">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                     </tableHeaderCell>
@@ -751,13 +757,23 @@
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                     </textFieldCell>
                                                 </tableColumn>
+                                                <tableColumn identifier="hotkey" width="120" minWidth="80" maxWidth="200" id="hotkey-column">
+                                                    <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="right" title="Hotkey">
+                                                        <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                    </tableHeaderCell>
+                                                    <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="NO" editable="NO" title="Click to set hotkey" alignment="right" id="hotkey-cell">
+                                                        <font key="font" metaFont="system" size="11"/>
+                                                        <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                    </textFieldCell>
+                                                </tableColumn>
                                             </tableColumns>
                                         </tableView>
                                     </subviews>
                                     <nil key="backgroundColor"/>
                                 </clipView>
                                 <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="Py0-2t-8Mb">
-                                    <rect key="frame" x="1" y="134" width="280" height="17"/>
+                                    <rect key="frame" x="1" y="288" width="253" height="17"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="xXy-zR-cv8">
@@ -765,45 +781,298 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mll-tv-XeJ">
-                                <rect key="frame" x="384" y="293" width="147" height="24"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="push" title="Save Current Layout" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="cXh-Je-e3j">
+                            <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mll-tv-XeJ">
+                                <rect key="frame" x="128" y="385" width="180" height="24"/>
+                                <buttonCell key="cell" type="push" title="Save Desktop to Layout" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="cXh-Je-e3j">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <color key="bezelColor" name="AccentColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="180" id="kbW-4e-Cck"/>
+                                </constraints>
+                            </button>
+                            <customView misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="grid-icon-8-bg">
+                                <rect key="frame" x="576" y="152" width="55" height="55"/>
+                                <subviews>
+                                    <button wantsLayer="YES" tag="8" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="grid-icon-8">
+                                        <rect key="frame" x="0.0" y="0.0" width="55" height="55"/>
+                                        <buttonCell key="cell" type="bevel" bezelStyle="rounded" id="grid-icon-8-cell">
+                                            <behavior key="behavior" changeContents="YES" lightByContents="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="55" id="grid-icon-8-height"/>
+                                            <constraint firstAttribute="width" constant="55" id="grid-icon-8-width"/>
+                                        </constraints>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="55" id="grid-icon-8-bg-height"/>
+                                    <constraint firstAttribute="width" constant="55" id="grid-icon-8-bg-width"/>
+                                    <constraint firstAttribute="bottom" secondItem="grid-icon-8" secondAttribute="bottom" id="grid-icon-8-bottom"/>
+                                    <constraint firstItem="grid-icon-8" firstAttribute="leading" secondItem="grid-icon-8-bg" secondAttribute="leading" id="grid-icon-8-leading"/>
+                                    <constraint firstItem="grid-icon-8" firstAttribute="top" secondItem="grid-icon-8-bg" secondAttribute="top" id="grid-icon-8-top"/>
+                                    <constraint firstAttribute="trailing" secondItem="grid-icon-8" secondAttribute="trailing" id="grid-icon-8-trailing"/>
+                                </constraints>
+                            </customView>
+                            <customView misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="grid-icon-12-bg">
+                                <rect key="frame" x="693" y="152" width="55" height="55"/>
+                                <subviews>
+                                    <button wantsLayer="YES" tag="12" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="grid-icon-12">
+                                        <rect key="frame" x="0.0" y="0.0" width="55" height="55"/>
+                                        <buttonCell key="cell" type="bevel" bezelStyle="rounded" id="grid-icon-12-cell">
+                                            <behavior key="behavior" changeContents="YES" lightByContents="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="55" id="grid-icon-12-height"/>
+                                            <constraint firstAttribute="width" constant="55" id="grid-icon-12-width"/>
+                                        </constraints>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="55" id="grid-icon-12-bg-height"/>
+                                    <constraint firstAttribute="width" constant="55" id="grid-icon-12-bg-width"/>
+                                    <constraint firstAttribute="bottom" secondItem="grid-icon-12" secondAttribute="bottom" id="grid-icon-12-bottom"/>
+                                    <constraint firstItem="grid-icon-12" firstAttribute="leading" secondItem="grid-icon-12-bg" secondAttribute="leading" id="grid-icon-12-leading"/>
+                                    <constraint firstItem="grid-icon-12" firstAttribute="top" secondItem="grid-icon-12-bg" secondAttribute="top" id="grid-icon-12-top"/>
+                                    <constraint firstAttribute="trailing" secondItem="grid-icon-12" secondAttribute="trailing" id="grid-icon-12-trailing"/>
+                                </constraints>
+                            </customView>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="grid-label-4">
+                                <rect key="frame" x="458" y="136" width="55" height="16"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="51" id="veN-re-9lS"/>
+                                </constraints>
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="4" id="grid-label-4-cell">
+                                    <font key="font" metaFont="smallSystem"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="grid-label-8">
+                                <rect key="frame" x="576" y="136" width="55" height="16"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="51" id="w6C-5T-Ow9"/>
+                                </constraints>
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="8" id="grid-label-8-cell">
+                                    <font key="font" metaFont="smallSystem"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="grid-label-12">
+                                <rect key="frame" x="693" y="136" width="55" height="16"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="51" id="JyV-6X-il8"/>
+                                </constraints>
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="12" id="grid-label-12-cell">
+                                    <font key="font" metaFont="smallSystem"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="row-button-upper">
+                                <rect key="frame" x="458" y="108" width="65" height="24"/>
+                                <buttonCell key="cell" type="push" title="Upper" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="row-button-upper-cell">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="65" id="t3x-Rc-xLe"/>
+                                </constraints>
+                            </button>
+                            <button tag="1" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="row-button-middle">
+                                <rect key="frame" x="533" y="108" width="65" height="24"/>
+                                <buttonCell key="cell" type="push" title="Middle" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="row-button-middle-cell">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="65" id="0cR-Sc-erd"/>
+                                </constraints>
+                            </button>
+                            <button tag="2" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="row-button-lower">
+                                <rect key="frame" x="608" y="108" width="65" height="24"/>
+                                <buttonCell key="cell" type="push" title="Lower" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="row-button-lower-cell">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="65" id="xgU-96-AhA"/>
+                                </constraints>
+                            </button>
+                            <button tag="3" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="row-button-none">
+                                <rect key="frame" x="683" y="108" width="65" height="24"/>
+                                <buttonCell key="cell" type="push" title="None" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="row-button-none-cell">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                            </button>
+                            <stepper misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="additional-rows-stepper">
+                                <rect key="frame" x="458" y="60" width="19" height="28"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="19" id="ixl-1C-K6Q"/>
+                                </constraints>
+                                <stepperCell key="cell" baseWritingDirection="leftToRight" alignment="left" increment="0.0" autorepeat="NO"/>
+                            </stepper>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="additional-rows-label">
+                                <rect key="frame" x="483" y="63" width="200" height="17"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="No additional rows" id="additional-rows-label-cell">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="apply-grid-button">
+                                <rect key="frame" x="458" y="20" width="300" height="32"/>
+                                <buttonCell key="cell" type="push" title="Apply Grid" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="apply-grid-button-cell">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <color key="bezelColor" name="AccentColor"/>
                             </button>
-                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kff-0H-gHk">
-                                <rect key="frame" x="74" y="7" width="514" height="50"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" id="AjF-tu-oFk">
-                                    <font key="font" metaFont="system"/>
-                                    <string key="title">Macintosh Orchestrator of Visual Ease v0.1
-Free (as in freedom) and open source. https://github.com/AaronRohrbacher/MOVE
-More features coming soon - don't pay for software that should be free!</string>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LAX-i3-BI2">
-                                <rect key="frame" x="9" y="10" width="52" height="48"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSApplicationIcon" id="0ZA-R2-IL6"/>
-                            </imageView>
+                            <customView misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="grid-icon-4-bg">
+                                <rect key="frame" x="458" y="152" width="55" height="55"/>
+                                <subviews>
+                                    <button wantsLayer="YES" tag="4" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="grid-icon-4">
+                                        <rect key="frame" x="0.0" y="0.0" width="55" height="55"/>
+                                        <buttonCell key="cell" type="bevel" bezelStyle="rounded" id="grid-icon-4-cell">
+                                            <behavior key="behavior" changeContents="YES" lightByContents="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="55" id="grid-icon-4-height"/>
+                                            <constraint firstAttribute="width" constant="55" id="grid-icon-4-width"/>
+                                        </constraints>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="55" id="grid-icon-4-bg-height"/>
+                                    <constraint firstAttribute="width" constant="55" id="grid-icon-4-bg-width"/>
+                                    <constraint firstAttribute="bottom" secondItem="grid-icon-4" secondAttribute="bottom" id="grid-icon-4-bottom"/>
+                                    <constraint firstItem="grid-icon-4" firstAttribute="leading" secondItem="grid-icon-4-bg" secondAttribute="leading" id="grid-icon-4-leading"/>
+                                    <constraint firstItem="grid-icon-4" firstAttribute="top" secondItem="grid-icon-4-bg" secondAttribute="top" id="grid-icon-4-top"/>
+                                    <constraint firstAttribute="trailing" secondItem="grid-icon-4" secondAttribute="trailing" id="grid-icon-4-trailing"/>
+                                </constraints>
+                            </customView>
+                            <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="background-mode-control">
+                                <rect key="frame" x="600" y="480" width="150" height="24"/>
+                                <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fit" id="background-mode-cell">
+                                    <segments>
+                                        <segment label="Dock"/>
+                                        <segment label="Menu Bar"/>
+                                    </segments>
+                                </segmentedCell>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="150" id="bg-mode-width"/>
+                                    <constraint firstAttribute="height" constant="24" id="bg-mode-height"/>
+                                </constraints>
+                                <connections>
+                                    <action selector="backgroundModeChanged:" target="hIl-yz-18R" id="bg-mode-action"/>
+                                </connections>
+                            </segmentedControl>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="start-on-login-checkbox">
+                                <rect key="frame" x="600" y="450" width="120" height="18"/>
+                                <buttonCell key="cell" type="switch" title="Start on Login" bezelStyle="rounded" alignment="left" controlSize="small" state="on" id="start-on-login-cell">
+                                    <behavior key="behavior" changeContents="YES" lightByContents="YES"/>
+                                    <font key="font" metaFont="smallSystem"/>
+                                </buttonCell>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="120" id="login-checkbox-width"/>
+                                    <constraint firstAttribute="height" constant="18" id="login-checkbox-height"/>
+                                </constraints>
+                                <connections>
+                                    <action selector="startOnLoginChanged:" target="hIl-yz-18R" id="start-on-login-action"/>
+                                </connections>
+                            </button>
                         </subviews>
+                        <constraints>
+                            <constraint firstItem="mll-tv-XeJ" firstAttribute="top" secondItem="r7d-et-ARg" secondAttribute="top" constant="104" id="18q-xd-cxE"/>
+                            <constraint firstItem="row-button-middle" firstAttribute="baseline" secondItem="row-button-lower" secondAttribute="baseline" id="1Ys-BF-1ib"/>
+                            <constraint firstItem="grid-label-4" firstAttribute="top" secondItem="grid-icon-4-bg" secondAttribute="bottom" id="3fS-dW-IVA"/>
+                            <constraint firstItem="grid-label-4" firstAttribute="baseline" secondItem="grid-label-8" secondAttribute="baseline" id="3nC-T7-oFo"/>
+                            <constraint firstItem="Kah-V6-SZR" firstAttribute="bottom" secondItem="additional-rows-stepper" secondAttribute="bottom" id="6FD-Dv-0jW"/>
+                            <constraint firstItem="grid-label-8" firstAttribute="baseline" secondItem="grid-label-12" secondAttribute="baseline" id="6sE-Gb-IDq"/>
+                            <constraint firstItem="grid-label-12" firstAttribute="leading" secondItem="grid-label-8" secondAttribute="trailing" constant="66" id="70s-A8-Q3a"/>
+                            <constraint firstAttribute="trailing" secondItem="apply-grid-button" secondAttribute="trailing" constant="22" id="84D-gp-Uly"/>
+                            <constraint firstItem="grid-icon-12-bg" firstAttribute="trailing" secondItem="row-button-none" secondAttribute="trailing" id="8bT-jN-BMo"/>
+                            <constraint firstItem="LAX-i3-BI2" firstAttribute="leading" secondItem="r7d-et-ARg" secondAttribute="leading" constant="20" symbolic="YES" id="8l1-tK-WLc"/>
+                            <constraint firstItem="mll-tv-XeJ" firstAttribute="leading" secondItem="r7d-et-ARg" secondAttribute="leading" constant="135" id="9v0-T8-kJz"/>
+                            <constraint firstItem="Kah-V6-SZR" firstAttribute="trailing" secondItem="FaE-MX-YLc" secondAttribute="trailing" id="AHs-bU-pmt"/>
+                            <constraint firstItem="grid-icon-4-bg" firstAttribute="top" secondItem="grid-icon-8-bg" secondAttribute="top" id="Ahc-Ll-4fo"/>
+                            <constraint firstItem="apply-grid-button" firstAttribute="top" secondItem="additional-rows-label" secondAttribute="bottom" constant="11" id="ApZ-EV-nbo"/>
+                            <constraint firstItem="additional-rows-stepper" firstAttribute="leading" secondItem="apply-grid-button" secondAttribute="leading" id="Aub-b0-XcO"/>
+                            <constraint firstItem="grid-icon-8-bg" firstAttribute="leading" secondItem="grid-icon-4-bg" secondAttribute="trailing" constant="63" id="BUH-au-D1v"/>
+                            <constraint firstAttribute="trailing" secondItem="additional-rows-label" secondAttribute="trailing" constant="99" id="Bp4-cn-RMJ"/>
+                            <constraint firstAttribute="bottom" secondItem="apply-grid-button" secondAttribute="bottom" constant="24" id="CBu-2N-gsx"/>
+                            <constraint firstItem="grid-icon-8-bg" firstAttribute="centerX" secondItem="grid-label-8" secondAttribute="centerX" id="Ccn-a2-qgG"/>
+                            <constraint firstItem="grid-label-4" firstAttribute="leading" secondItem="Kah-V6-SZR" secondAttribute="trailing" constant="60" id="DE0-2K-4yX"/>
+                            <constraint firstItem="grid-icon-8-bg" firstAttribute="top" secondItem="grid-icon-12-bg" secondAttribute="top" id="De3-vq-mYc"/>
+                            <constraint firstItem="gcj-t4-rut" firstAttribute="top" secondItem="Kah-V6-SZR" secondAttribute="bottom" constant="12" id="De8-1n-cpk"/>
+                            <constraint firstItem="LAX-i3-BI2" firstAttribute="top" secondItem="r7d-et-ARg" secondAttribute="top" constant="20" symbolic="YES" id="Djf-B4-FHt"/>
+                            <constraint firstItem="row-button-none" firstAttribute="top" secondItem="grid-icon-12-bg" secondAttribute="bottom" constant="20" symbolic="YES" id="FXR-5f-dh7"/>
+                            <constraint firstItem="grid-icon-4-bg" firstAttribute="leading" secondItem="row-button-upper" secondAttribute="leading" id="JGD-Lu-ElN"/>
+                            <constraint firstItem="gcj-t4-rut" firstAttribute="baseline" secondItem="FaE-MX-YLc" secondAttribute="firstBaseline" id="JLr-v3-2Vq"/>
+                            <constraint firstItem="FaE-MX-YLc" firstAttribute="centerY" secondItem="apply-grid-button" secondAttribute="centerY" id="PFr-bi-0Uy"/>
+                            <constraint firstItem="grid-icon-4-bg" firstAttribute="top" secondItem="r7d-et-ARg" secondAttribute="top" constant="316" id="QKk-nd-sk5"/>
+                            <constraint firstItem="row-button-none" firstAttribute="leading" secondItem="row-button-lower" secondAttribute="trailing" constant="10" id="TTI-zv-nHP"/>
+                            <constraint firstAttribute="trailing" secondItem="grid-icon-12-bg" secondAttribute="trailing" constant="32" id="U7N-sa-buo"/>
+                            <constraint firstItem="row-button-middle" firstAttribute="leading" secondItem="row-button-upper" secondAttribute="trailing" constant="10" id="Uec-aV-hQd"/>
+                            <constraint firstItem="grid-icon-12-bg" firstAttribute="leading" secondItem="grid-icon-8-bg" secondAttribute="trailing" constant="62" id="XVd-ej-27l"/>
+                            <constraint firstItem="grid-icon-12-bg" firstAttribute="centerX" secondItem="grid-label-12" secondAttribute="centerX" id="YS6-Ap-ZSl"/>
+                            <constraint firstItem="apply-grid-button" firstAttribute="top" secondItem="additional-rows-stepper" secondAttribute="bottom" constant="8" id="a4V-sQ-EKN"/>
+                            <constraint firstItem="grid-icon-4-bg" firstAttribute="centerX" secondItem="grid-label-4" secondAttribute="centerX" id="b7q-mH-rMp"/>
+                            <constraint firstItem="additional-rows-label" firstAttribute="leading" secondItem="additional-rows-stepper" secondAttribute="trailing" constant="8" symbolic="YES" id="b9g-He-g4A"/>
+                            <constraint firstItem="grid-label-8" firstAttribute="leading" secondItem="grid-label-4" secondAttribute="trailing" constant="67" id="en4-AR-ns5"/>
+                            <constraint firstItem="additional-rows-stepper" firstAttribute="top" secondItem="row-button-upper" secondAttribute="bottom" constant="20" symbolic="YES" id="ets-mK-SJw"/>
+                            <constraint firstItem="Kah-V6-SZR" firstAttribute="leading" secondItem="gcj-t4-rut" secondAttribute="leading" id="f9T-Me-eW1"/>
+                            <constraint firstItem="row-button-upper" firstAttribute="top" secondItem="grid-label-4" secondAttribute="bottom" constant="4" id="fEb-As-jtB"/>
+                            <constraint firstItem="row-button-lower" firstAttribute="baseline" secondItem="row-button-none" secondAttribute="baseline" id="fsK-X1-9bK"/>
+                            <constraint firstItem="row-button-upper" firstAttribute="leading" secondItem="additional-rows-stepper" secondAttribute="leading" id="gSu-Zl-Clb"/>
+                            <constraint firstItem="FaE-MX-YLc" firstAttribute="baseline" secondItem="gcj-t4-rut" secondAttribute="firstBaseline" id="h8K-7K-kdZ"/>
+                            <constraint firstItem="grid-icon-4-bg" firstAttribute="leading" secondItem="Kah-V6-SZR" secondAttribute="trailing" constant="58" id="ijI-QM-OQe"/>
+                            <constraint firstItem="apply-grid-button" firstAttribute="top" secondItem="row-button-none" secondAttribute="bottom" constant="56" id="ke1-8j-jAQ"/>
+                            <constraint firstItem="Kah-V6-SZR" firstAttribute="leading" secondItem="r7d-et-ARg" secondAttribute="leading" constant="50" id="l8C-of-lsU"/>
+                            <constraint firstItem="grid-label-4" firstAttribute="firstBaseline" secondItem="grid-label-8" secondAttribute="firstBaseline" id="mm8-n8-e2R"/>
+                            <constraint firstItem="row-button-middle" firstAttribute="top" secondItem="grid-icon-8-bg" secondAttribute="bottom" constant="20" symbolic="YES" id="npM-YM-apG"/>
+                            <constraint firstItem="row-button-upper" firstAttribute="baseline" secondItem="row-button-middle" secondAttribute="baseline" id="pn9-k2-7Yh"/>
+                            <constraint firstItem="grid-label-8" firstAttribute="firstBaseline" secondItem="grid-label-12" secondAttribute="firstBaseline" id="poY-Ar-gjj"/>
+                            <constraint firstItem="row-button-upper" firstAttribute="top" secondItem="grid-icon-4-bg" secondAttribute="bottom" constant="20" symbolic="YES" id="qcy-Th-GeK"/>
+                            <constraint firstItem="additional-rows-label" firstAttribute="top" secondItem="row-button-upper" secondAttribute="bottom" constant="28" id="tHS-kH-RtE"/>
+                            <constraint firstItem="row-button-lower" firstAttribute="leading" secondItem="row-button-middle" secondAttribute="trailing" constant="10" id="v2i-qN-p3c"/>
+                            <constraint firstItem="Kah-V6-SZR" firstAttribute="top" secondItem="mll-tv-XeJ" secondAttribute="bottom" constant="20" symbolic="YES" id="yik-am-Psl"/>
+                            <constraint firstAttribute="trailing" secondItem="background-mode-control" secondAttribute="trailing" constant="20" id="bg-mode-trailing"/>
+                            <constraint firstItem="background-mode-control" firstAttribute="top" secondItem="r7d-et-ARg" secondAttribute="top" constant="20" id="bg-mode-top"/>
+                            <constraint firstItem="start-on-login-checkbox" firstAttribute="top" secondItem="background-mode-control" secondAttribute="bottom" constant="8" id="login-checkbox-top"/>
+                            <constraint firstItem="start-on-login-checkbox" firstAttribute="trailing" secondItem="r7d-et-ARg" secondAttribute="trailing" constant="20" id="login-checkbox-trailing"/>
+                        </constraints>
                     </view>
                     <connections>
+                        <outlet property="additionalRowsLabel" destination="additional-rows-label" id="additional-rows-label-outlet"/>
+                        <outlet property="additionalRowsStepper" destination="additional-rows-stepper" id="additional-rows-stepper-outlet"/>
+                        <outlet property="applyGridButton" destination="apply-grid-button" id="apply-grid-button-outlet"/>
                         <outlet property="applyLayoutButton" destination="gcj-t4-rut" id="apply-layout-outlet"/>
                         <outlet property="deleteLayoutButton" destination="FaE-MX-YLc" id="delete-layout-outlet"/>
+                        <outlet property="gridIconButton12" destination="grid-icon-12" id="grid-icon-12-outlet"/>
+                        <outlet property="gridIconButton4" destination="grid-icon-4" id="grid-icon-4-outlet"/>
+                        <outlet property="gridIconButton8" destination="grid-icon-8" id="grid-icon-8-outlet"/>
                         <outlet property="layoutsScrollView" destination="Kah-V6-SZR" id="layouts-scroll-outlet"/>
                         <outlet property="layoutsTableView" destination="layouts-table-view" id="layouts-table-outlet"/>
+                        <outlet property="rowButtonLower" destination="row-button-lower" id="row-button-lower-outlet"/>
+                        <outlet property="rowButtonMiddle" destination="row-button-middle" id="row-button-middle-outlet"/>
+                        <outlet property="rowButtonNone" destination="row-button-none" id="row-button-none-outlet"/>
+                        <outlet property="rowButtonUpper" destination="row-button-upper" id="row-button-upper-outlet"/>
                         <outlet property="saveLayoutButton" destination="mll-tv-XeJ" id="save-layout-outlet"/>
+                        <outlet property="backgroundModeSegmentedControl" destination="background-mode-control" id="bg-mode-outlet"/>
+                        <outlet property="startOnLoginCheckbox" destination="start-on-login-checkbox" id="start-on-login-outlet"/>
                     </connections>
                 </viewController>
                 <customObject id="knV-ed-uG1" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+                <userDefaultsController representsSharedInstance="YES" id="9MS-wA-QJ0"/>
             </objects>
-            <point key="canvasLocation" x="187" y="683.5"/>
+            <point key="canvasLocation" x="187" y="701.5"/>
         </scene>
     </scenes>
     <resources>
