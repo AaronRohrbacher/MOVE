@@ -16,7 +16,6 @@ else {
   fatalError("Unable to load Finder preferences plist.")
 }
 
-// Navigate into the nested dictionaries
 guard
   var desktop = plist["DesktopViewSettings"] as? [String: Any],
   var stdView = desktop["StandardViewSettings"] as? [String: Any],
@@ -28,7 +27,6 @@ else {
 
 print("Current IconPositions has \(positions.count) items")
 
-// Get ALL files on desktop
 let desktopPath = NSHomeDirectory() + "/Desktop"
 if let contents = try? FileManager.default.contentsOfDirectory(atPath: desktopPath) {
   print("Found \(contents.count) items on desktop")
@@ -38,7 +36,6 @@ if let contents = try? FileManager.default.contentsOfDirectory(atPath: desktopPa
   var addedCount = 0
 
   for item in contents where !item.hasPrefix(".") {
-    // Only add if not already in positions
     if positions[item] == nil {
       positions[item] = [
         "x": x,
@@ -61,7 +58,6 @@ if let contents = try? FileManager.default.contentsOfDirectory(atPath: desktopPa
   print("\nAdded \(addedCount) new positions")
 }
 
-// Write them back
 iconView["IconPositions"] = positions
 stdView["IconViewSettings"] = iconView
 desktop["StandardViewSettings"] = stdView
@@ -71,7 +67,6 @@ let newData = try! PropertyListSerialization.data(
   fromPropertyList: plist, format: .binary, options: 0)
 try! newData.write(to: plistURL)
 
-// Apply by restarting Finder
 print("\nRestarting Finder...")
 _ = Process.launchedProcess(launchPath: "/usr/bin/killall", arguments: ["Finder"])
 

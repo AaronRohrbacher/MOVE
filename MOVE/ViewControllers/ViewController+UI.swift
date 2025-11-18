@@ -79,7 +79,6 @@ extension ViewController {
         checkbox.isEnabled = false
         checkbox.setAccessibilityIdentifier("SaveLayoutCheckbox")
         
-        // Use attributed string with gray color for disabled appearance
         let attributedTitle = NSAttributedString(
             string: "Include desktop icons (not available in macOS 26)",
             attributes: [.foregroundColor: NSColor.disabledControlTextColor]
@@ -90,7 +89,6 @@ extension ViewController {
         container.addSubview(nameField)
         container.addSubview(checkbox)
         
-        // Force disabled appearance after adding to view hierarchy
         DispatchQueue.main.async {
             checkbox.isEnabled = false
             if let cell = checkbox.cell as? NSButtonCell {

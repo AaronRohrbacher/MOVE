@@ -12,6 +12,7 @@ class BackgroundModeManager: NSObject {
     private var statusItem: NSStatusItem?
     private let backgroundModeKey = "BackgroundMode"
     private let startOnLoginKey = "StartOnLogin"
+    private var visibleWindowCount = 0
     
     override init() {
         super.init()
@@ -51,11 +52,32 @@ class BackgroundModeManager: NSObject {
         switch mode {
         case .dock:
             removeStatusItem()
-            NSApp.setActivationPolicy(.regular)
         case .menuBar:
             createStatusItem()
+        }
+        updateActivationPolicy()
+    }
+
+    private func updateActivationPolicy() {
+        if visibleWindowCount > 0 {
+            NSApp.setActivationPolicy(.regular)
+            return
+        }
+        switch currentMode {
+        case .dock:
+            NSApp.setActivationPolicy(.regular)
+        case .menuBar:
             NSApp.setActivationPolicy(.accessory)
         }
+    }
+
+    func setMainWindowVisible(_ isVisible: Bool) {
+        if isVisible {
+            visibleWindowCount += 1
+        } else {
+            visibleWindowCount = max(0, visibleWindowCount - 1)
+        }
+        updateActivationPolicy()
     }
     
     private func createStatusItem() {
@@ -63,22 +85,17 @@ class BackgroundModeManager: NSObject {
         
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         if let button = statusItem?.button {
-            // Use app icon for menu bar
             if let appIcon = NSImage(named: "AppIcon") ?? NSApplication.shared.applicationIconImage {
                 button.image = appIcon
-                // Resize to menu bar size (typically 18-22 points)
                 appIcon.size = NSSize(width: 18, height: 18)
             } else {
-                // Fallback to system symbol if app icon not found
                 button.image = NSImage(systemSymbolName: "square.grid.2x2", accessibilityDescription: "MOVE")
                 button.image?.isTemplate = true
             }
-            // Don't set button action when using menu - menu handles clicks
             button.action = nil
             button.target = nil
         }
         
-        // Create menu
         let menu = NSMenu()
         menu.autoenablesItems = false
         
@@ -109,27 +126,19 @@ class BackgroundModeManager: NSObject {
     }
     
     @objc private func showWindow() {
-        // Switch back to dock mode temporarily to show window
-        let previousMode = currentMode
         NSApp.setActivationPolicy(.regular)
         NSApp.activate(ignoringOtherApps: true)
         if let window = NSApplication.shared.windows.first {
             window.makeKeyAndOrderFront(nil)
         }
-        // Restore mode after a brief delay
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.applyMode(previousMode)
-        }
     }
     
     @objc private func quitApp() {
-        // Force quit - override the cancel behavior
         NSApplication.shared.terminate(nil)
     }
     
     private func setLoginItem(enabled: Bool) {
         if #available(macOS 13.0, *) {
-            // Use SMAppService for macOS 13+
             if enabled {
                 do {
                     try SMAppService.mainApp.register()
@@ -144,14 +153,12 @@ class BackgroundModeManager: NSObject {
                 }
             }
         } else {
-            // For older macOS versions, use LSSharedFileList
             let loginItemsList = LSSharedFileListCreate(nil, kLSSharedFileListSessionLoginItems.takeUnretainedValue(), nil)
             guard let loginItems = loginItemsList?.takeRetainedValue() else { return }
             
             let appURL = Bundle.main.bundleURL as CFURL
             
             if enabled {
-                // Check if already exists first
                 var snapshot: Unmanaged<CFArray>?
                 snapshot = LSSharedFileListCopySnapshot(loginItems, nil)
                 if let items = snapshot?.takeRetainedValue() as? [LSSharedFileListItem] {

@@ -55,7 +55,6 @@ if let desktop = plist["DesktopViewSettings"] as? [String: Any] {
     }
 }
 
-// Alternative path check
 print("\n\nChecking alternative structure:")
 if let standardViewSettings = plist["StandardViewSettings"] as? [String: Any] {
     print("Found StandardViewSettings at root level")
@@ -67,7 +66,6 @@ if let standardViewSettings = plist["StandardViewSettings"] as? [String: Any] {
     }
 }
 
-// Check desktop separately
 if let desktopSettings = plist["Desktop"] as? [String: Any] {
     print("\nFound Desktop settings:")
     for key in desktopSettings.keys {

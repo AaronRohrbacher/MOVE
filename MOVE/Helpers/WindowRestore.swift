@@ -29,9 +29,6 @@ enum WindowRestore {
             for window in layout.windows {
                 restoreWindow(window)
             }
-
-            // Desktop icons restoration is handled by ViewController.restoreDesktopIcons
-            // This static method only handles window restoration
         }
     }
 

@@ -2,6 +2,7 @@ import ApplicationServices
 import Cocoa
 import ObjectiveC
 import os.log
+import QuartzCore
 
 class ViewController: NSViewController {
     var savedLayouts: [LayoutData] = []
@@ -15,7 +16,6 @@ class ViewController: NSViewController {
     @IBOutlet var layoutsTableView: NSTableView?
     @IBOutlet var blurbTextField: NSTextField?
     
-    // Grid UI outlets from storyboard
     @IBOutlet var gridIconButton4: NSButton?
     @IBOutlet var gridIconButton8: NSButton?
     @IBOutlet var gridIconButton12: NSButton?
@@ -27,7 +27,8 @@ class ViewController: NSViewController {
     @IBOutlet var additionalRowsLabel: NSTextField?
     @IBOutlet var applyGridButton: NSButton?
     
-    // Background mode controls
+    @IBOutlet var hotkeyButtonTemplate: NSButton?
+    
     @IBOutlet var backgroundModeSegmentedControl: NSSegmentedControl?
     @IBOutlet var startOnLoginCheckbox: NSButton?
 
@@ -35,15 +36,12 @@ class ViewController: NSViewController {
     var permissionsLabel: NSTextField?
     var permissionsButton: NSButton?
     var gridController: GridController?
+    
+    fileprivate var loadingOverlayWindow: NSPanel?
+    fileprivate var loadingOverlayHideWorkItem: DispatchWorkItem?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("ViewController: viewDidLoad called")
-        // Write to file for testing
-        let testString = "ViewController: viewDidLoad executed at \(Date())\n"
-        if let data = testString.data(using: .utf8) {
-            try? data.write(to: URL(fileURLWithPath: "/tmp/move_debug.log"), options: .atomic)
-        }
 
         if ProcessInfo.processInfo.arguments.contains("--clear-user-defaults") {
             UserDefaults.standard.removeObject(forKey: layoutsKey)
@@ -51,12 +49,9 @@ class ViewController: NSViewController {
             savedLayouts = []
         }
 
-        print("ViewController: Loading saved layouts...")
         loadSavedLayouts()
 
-        // Create a test layout if none exist
         if savedLayouts.isEmpty {
-            print("ViewController: No layouts found, creating a test layout")
             let testLayout = LayoutData(
                 name: "Test Layout",
                 windows: [WindowInfo(bundleIdentifier: "test", windowTitle: "Test Window", frame: NSRect(x: 100, y: 100, width: 800, height: 600), isMinimized: false, isHidden: false, windowNumber: 1)],
@@ -66,46 +61,176 @@ class ViewController: NSViewController {
             )
             savedLayouts.append(testLayout)
             LayoutPersistence.saveLayouts(savedLayouts)
-            print("ViewController: Created test layout")
         }
 
-        print("ViewController: Setting up UI...")
         setupUI()
-        print("ViewController: Creating permissions banner...")
+        registerTableCellViews()
+        layoutsTableView?.reloadData()
         createPermissionsBanner()
-        print("ViewController: Setting up grid controller...")
         setupGridController()
-        print("ViewController: Setting up blurb text field...")
         setupBlurbTextField()
-        print("ViewController: Setting up background mode...")
         setupBackgroundMode()
         
-        // Disable state restoration to prevent flushAllChanges spam
+        if let templateButton = hotkeyButtonTemplate {
+            templateButton.isHidden = true
+        }
+        
         if let window = view.window {
             window.restorationClass = nil
             window.isRestorable = false
         }
+    }
+    
+    private func registerTableCellViews() {
+        guard let tableView = layoutsTableView else { return }
         
-        print("ViewController: viewDidLoad completed")
+        if let hotkeyNib = NSNib(nibNamed: "HotkeyTableCellView", bundle: nil) {
+            tableView.register(hotkeyNib, forIdentifier: NSUserInterfaceItemIdentifier("HotkeyButton"))
+        }
+        
+        if let layoutNib = NSNib(nibNamed: "LayoutTableCellView", bundle: nil) {
+            tableView.register(layoutNib, forIdentifier: NSUserInterfaceItemIdentifier("LayoutCell"))
+        }
+    }
+    
+    fileprivate func showLoadingOverlay() {
+        DispatchQueue.main.async {
+            if self.loadingOverlayWindow != nil { return }
+            guard let screen = self.view.window?.screen ?? NSScreen.main else { return }
+            let screenFrame = screen.frame
+            
+            let overlay = NSPanel(contentRect: screenFrame, styleMask: [.borderless], backing: .buffered, defer: false, screen: screen)
+            overlay.level = .screenSaver
+            overlay.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .stationary]
+            overlay.animationBehavior = .none
+            overlay.isOpaque = false
+            overlay.backgroundColor = .clear
+            overlay.ignoresMouseEvents = false
+            overlay.hidesOnDeactivate = false
+            overlay.isMovable = false
+            overlay.isMovableByWindowBackground = false
+            overlay.hasShadow = false
+            overlay.titleVisibility = .hidden
+            overlay.titlebarAppearsTransparent = true
+            overlay.isReleasedWhenClosed = false
+            overlay.sharingType = .none
+            overlay.preventsApplicationTerminationWhenModal = false
+            
+            let rootView = NSView(frame: NSRect(origin: .zero, size: screenFrame.size))
+            rootView.translatesAutoresizingMaskIntoConstraints = true
+            overlay.contentView = rootView
+            
+            let contentView = NSView()
+            contentView.translatesAutoresizingMaskIntoConstraints = false
+            contentView.wantsLayer = true
+            contentView.layer?.backgroundColor = NSColor.black.withAlphaComponent(0.35).cgColor
+            rootView.addSubview(contentView)
+            
+            let container = NSView()
+            container.translatesAutoresizingMaskIntoConstraints = false
+            container.wantsLayer = true
+            container.layer?.backgroundColor = NSColor.controlBackgroundColor.withAlphaComponent(0.85).cgColor
+            container.layer?.cornerRadius = 16
+            
+            let logoImage = NSApp.applicationIconImage ?? NSImage(size: NSSize(width: 128, height: 128))
+            let logoView = NSImageView(image: logoImage)
+            logoView.translatesAutoresizingMaskIntoConstraints = false
+            logoView.wantsLayer = true
+            logoView.layer?.cornerRadius = 18
+            logoView.layer?.masksToBounds = true
+            logoView.imageScaling = .scaleProportionallyUpOrDown
+            
+            let rotation = CABasicAnimation(keyPath: "transform.rotation.z")
+            rotation.fromValue = 0
+            rotation.toValue = Double.pi * 2
+            rotation.duration = 1.6
+            rotation.repeatCount = .infinity
+            logoView.layer?.add(rotation, forKey: "spin")
+            
+            let label = NSTextField(labelWithString: "Applying layout…")
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.font = NSFont.systemFont(ofSize: 15, weight: .medium)
+            label.textColor = .labelColor
+            label.alignment = .center
+            
+            let stack = NSStackView()
+            stack.orientation = .vertical
+            stack.alignment = .centerX
+            stack.distribution = .gravityAreas
+            stack.spacing = 12
+            stack.translatesAutoresizingMaskIntoConstraints = false
+            stack.addArrangedSubview(logoView)
+            stack.addArrangedSubview(label)
+            
+            container.addSubview(stack)
+            contentView.addSubview(container)
+            
+            NSLayoutConstraint.activate([
+                contentView.leadingAnchor.constraint(equalTo: rootView.leadingAnchor),
+                contentView.trailingAnchor.constraint(equalTo: rootView.trailingAnchor),
+                contentView.topAnchor.constraint(equalTo: rootView.topAnchor),
+                contentView.bottomAnchor.constraint(equalTo: rootView.bottomAnchor),
+                
+                container.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+                container.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+                
+                stack.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 32),
+                stack.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -32),
+                stack.topAnchor.constraint(equalTo: container.topAnchor, constant: 24),
+                stack.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -24),
+                
+                logoView.widthAnchor.constraint(equalToConstant: 72),
+                logoView.heightAnchor.constraint(equalTo: logoView.widthAnchor)
+            ])
+            
+            overlay.alphaValue = 0
+            overlay.makeKeyAndOrderFront(nil)
+            overlay.animator().alphaValue = 1
+            self.loadingOverlayWindow = overlay
+            
+            self.loadingOverlayHideWorkItem?.cancel()
+            let workItem = DispatchWorkItem { [weak self] in
+                self?.hideLoadingOverlay()
+            }
+            self.loadingOverlayHideWorkItem = workItem
+            DispatchQueue.main.asyncAfter(deadline: .now() + 20, execute: workItem)
+        }
+    }
+    
+    fileprivate func hideLoadingOverlay() {
+        DispatchQueue.main.async {
+            self.loadingOverlayHideWorkItem?.cancel()
+            self.loadingOverlayHideWorkItem = nil
+            guard let overlay = self.loadingOverlayWindow else { return }
+            
+            NSAnimationContext.runAnimationGroup { context in
+                context.duration = 0.25
+                overlay.animator().alphaValue = 0
+            } completionHandler: {
+                overlay.orderOut(nil)
+                self.loadingOverlayWindow = nil
+            }
+        }
     }
     
     func setupBackgroundMode() {
-        // Setup background mode segmented control
         if let control = backgroundModeSegmentedControl {
-            control.segmentCount = 2
-            control.setLabel("Dock", forSegment: 0)
-            control.setLabel("Menu Bar", forSegment: 1)
+            if control.segmentCount < 2 {
+                control.segmentCount = 2
+                if control.label(forSegment: 0)?.isEmpty != false {
+                    control.setLabel("Dock", forSegment: 0)
+                }
+                if control.label(forSegment: 1)?.isEmpty != false {
+                    control.setLabel("Menu Bar", forSegment: 1)
+                }
+            }
             control.target = self
             control.action = #selector(backgroundModeChanged(_:))
-            
-            let currentMode = BackgroundModeManager.shared.currentMode
-            control.selectedSegment = currentMode == .dock ? 0 : 1
+            control.selectedSegment = BackgroundModeManager.shared.currentMode == .dock ? 0 : 1
         }
         
-        // Setup start on login checkbox
         if let checkbox = startOnLoginCheckbox {
             checkbox.setButtonType(.switch)
-            checkbox.title = "Start on Login"
             checkbox.target = self
             checkbox.action = #selector(startOnLoginChanged(_:))
             checkbox.state = BackgroundModeManager.shared.startOnLogin ? .on : .off
@@ -131,21 +256,18 @@ class ViewController: NSViewController {
         
         let attributedString = NSMutableAttributedString(string: fullText)
         
-        // Title line - bold, slightly larger
         if let titleRange = fullText.range(of: titleText) {
             let nsRange = NSRange(titleRange, in: fullText)
             attributedString.addAttribute(.font, value: NSFont.boldSystemFont(ofSize: 12), range: nsRange)
             attributedString.addAttribute(.foregroundColor, value: NSColor.labelColor, range: nsRange)
         }
         
-        // Subtitle line - regular font
         if let subtitleRange = fullText.range(of: subtitleText) {
             let nsRange = NSRange(subtitleRange, in: fullText)
             attributedString.addAttribute(.font, value: NSFont.systemFont(ofSize: 10), range: nsRange)
             attributedString.addAttribute(.foregroundColor, value: NSColor.secondaryLabelColor, range: nsRange)
         }
         
-        // URL - link color, underlined
         if let urlRange = fullText.range(of: urlString) {
             let nsRange = NSRange(urlRange, in: fullText)
             if let url = URL(string: urlString) {
@@ -156,7 +278,6 @@ class ViewController: NSViewController {
             attributedString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: nsRange)
         }
         
-        // Set paragraph style for better line spacing
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 2
         paragraphStyle.alignment = .center
@@ -169,99 +290,59 @@ class ViewController: NSViewController {
     }
     
     func setupGridController() {
-        // Create GridController programmatically
         let gridController = GridController()
         gridController.mainViewController = self
         
-        // Connect storyboard UI elements to GridController
-        var gridButtons: [NSButton] = []
-        if let button4 = gridIconButton4 { gridButtons.append(button4) }
-        if let button8 = gridIconButton8 { gridButtons.append(button8) }
-        if let button12 = gridIconButton12 { gridButtons.append(button12) }
-        gridController.gridIconButtons = gridButtons
+        gridController.gridIconButtons = [gridIconButton4, gridIconButton8, gridIconButton12].compactMap { $0 }
+        gridController.rowSelectionButtons = [rowButtonUpper, rowButtonMiddle, rowButtonLower, rowButtonNone].compactMap { $0 }
+        gridController.additionalRowsStepper = additionalRowsStepper
+        gridController.additionalRowsLabel = additionalRowsLabel
+        gridController.applyGridButton = applyGridButton
         
-        var rowButtons: [NSButton] = []
-        if let upper = rowButtonUpper { rowButtons.append(upper) }
-        if let middle = rowButtonMiddle { rowButtons.append(middle) }
-        if let lower = rowButtonLower { rowButtons.append(lower) }
-        if let none = rowButtonNone { rowButtons.append(none) }
-        gridController.rowSelectionButtons = rowButtons
-        
-        if let stepper = additionalRowsStepper {
-            gridController.additionalRowsStepper = stepper
-        }
-        if let label = additionalRowsLabel {
-            gridController.additionalRowsLabel = label
-        }
-        if let button = applyGridButton {
-            gridController.applyGridButton = button
-        }
-        
-        // Setup UI from storyboard elements
         gridController.setupUIFromStoryboard()
-        
-        // Store reference
         self.gridController = gridController
-        
-        // Note: We don't add the GridController's view since the UI elements
-        // are already in the storyboard and part of this view controller's view
     }
 
     override func viewDidAppear() {
         super.viewDidAppear()
-
-        // Set window content size and minimum size to ensure grid feature is always visible
+        BackgroundModeManager.shared.setMainWindowVisible(true)
+        
         if let window = view.window {
-            let contentSize = NSSize(width: 680, height: 360)
-            window.setContentSize(contentSize)
             window.contentMinSize = NSSize(width: 680, height: 360)
-            window.contentMaxSize = NSSize(width: 2000, height: 2000) // Allow resizing outward
+            window.contentMaxSize = NSSize(width: 2000, height: 2000)
         }
 
         saveLayoutButton?.setAccessibilityIdentifier("SaveCurrentLayoutButton")
         applyLayoutButton?.setAccessibilityIdentifier("ApplyLayoutButton")
         deleteLayoutButton?.setAccessibilityIdentifier("DeleteLayoutButton")
         
-        // Ensure Apply Layout button is connected and enabled
-        if let button = applyLayoutButton {
-            button.target = self
-            button.action = #selector(applyLayout)
-            button.isEnabled = true
-            print("viewDidAppear: Apply Layout button reconnected and enabled")
-        }
+        applyLayoutButton?.target = self
+        applyLayoutButton?.action = #selector(applyLayout)
+        applyLayoutButton?.isEnabled = true
 
         checkPermissionsAndUpdateUI()
         permissionsTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { [weak self] _ in
-            guard let self = self else { return }
-            self.checkPermissionsAndUpdateUI()
+            self?.checkPermissionsAndUpdateUI()
         }
     }
 
     override func viewWillDisappear() {
         super.viewWillDisappear()
+        BackgroundModeManager.shared.setMainWindowVisible(false)
         permissionsTimer?.invalidate()
         permissionsTimer = nil
     }
 
     private func setupUI() {
-        print("ViewController: Setting up table view")
         layoutsTableView?.dataSource = self
         layoutsTableView?.delegate = self
         layoutsTableView?.target = self
         layoutsTableView?.doubleAction = #selector(applyLayout)
-        print("ViewController: Table view setup complete - dataSource: \(String(describing: layoutsTableView?.dataSource)), delegate: \(String(describing: layoutsTableView?.delegate))")
 
-        if let button = applyLayoutButton {
-            button.target = self
-            button.action = #selector(applyLayout)
-            print("Apply Layout button connected: target=\(String(describing: button.target)), action=\(String(describing: button.action))")
-        } else {
-            print("WARNING: applyLayoutButton outlet is nil")
-        }
-
+        applyLayoutButton?.target = self
+        applyLayoutButton?.action = #selector(applyLayout)
         deleteLayoutButton?.target = self
         deleteLayoutButton?.action = #selector(deleteLayout)
-
         saveLayoutButton?.target = self
         saveLayoutButton?.action = #selector(saveLayout)
     }
@@ -275,7 +356,6 @@ class ViewController: NSViewController {
         }
 
         guard let windowList = CGWindowListCopyWindowInfo([.optionOnScreenOnly], kCGNullWindowID) as? [[String: Any]] else {
-            print("Failed to get window list")
             return []
         }
 
@@ -298,13 +378,7 @@ class ViewController: NSViewController {
             if windowLayer != 0 { continue }
             if width < 50 || height < 50 { continue }
 
-            var bundleId = ""
-            let runningApps = NSWorkspace.shared.runningApplications
-            if let app = runningApps.first(where: { $0.processIdentifier == pid }) {
-                bundleId = app.bundleIdentifier ?? ownerName
-            } else {
-                bundleId = ownerName
-            }
+            let bundleId = NSWorkspace.shared.runningApplications.first(where: { $0.processIdentifier == pid })?.bundleIdentifier ?? ownerName
 
             let isMinimized = windowDict[kCGWindowIsOnscreen as String] as? Bool == false
             let isHidden = windowDict[kCGWindowAlpha as String] as? CGFloat ?? 1.0 < 0.1
@@ -327,6 +401,7 @@ class ViewController: NSViewController {
     }
 
     func restoreLayout(_ layout: LayoutData) {
+        showLoadingOverlay()
         let runningApps = NSWorkspace.shared.runningApplications
         let runningBundleIds = Set(runningApps.compactMap { $0.bundleIdentifier })
 
@@ -350,54 +425,26 @@ class ViewController: NSViewController {
         }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
+            guard let self = self else { return }
             for window in layout.windows {
-                self?.restoreWindow(window)
+                self.restoreWindow(window)
             }
 
             if layout.includeDesktopIcons, let icons = layout.desktopIcons {
-                self?.restoreDesktopIcons(icons)
+                self.restoreDesktopIcons(icons)
             }
+            
+            self.hideLoadingOverlay()
         }
     }
 
     private func restoreWindow(_ savedWindow: WindowInfo) {
-        print("restoreWindow: Attempting to restore '\(savedWindow.windowTitle)' from bundle '\(savedWindow.bundleIdentifier)' to frame (\(savedWindow.frame.origin.x), \(savedWindow.frame.origin.y), \(savedWindow.frame.size.width), \(savedWindow.frame.size.height))")
-        
-        let runningApps = NSWorkspace.shared.runningApplications
-        guard let app = runningApps.first(where: {
-            $0.bundleIdentifier == savedWindow.bundleIdentifier ||
-                $0.localizedName == savedWindow.bundleIdentifier
-        }) else {
-            print("restoreWindow: App '\(savedWindow.bundleIdentifier)' not found in running applications")
-            return
-        }
-
-        if app.processIdentifier == getpid() {
-            print("restoreWindow: Skipping our own app")
-            return
-        }
+        guard let app = NSWorkspace.shared.runningApplications.first(where: {
+            $0.bundleIdentifier == savedWindow.bundleIdentifier || $0.localizedName == savedWindow.bundleIdentifier
+        }), app.processIdentifier != getpid() else { return }
 
         let appElement = AXUIElementCreateApplication(app.processIdentifier)
-
-        var success = false
-
-        if !savedWindow.windowTitle.isEmpty {
-            print("restoreWindow: Trying to move window by title '\(savedWindow.windowTitle)'")
-            success = moveWindowByTitle(appElement: appElement,
-                                        title: savedWindow.windowTitle,
-                                        to: savedWindow.frame)
-        }
-
-        if !success {
-            print("restoreWindow: Title match failed, trying first window")
-            success = moveFirstWindow(of: appElement, to: savedWindow.frame)
-        }
-        
-        if success {
-            print("restoreWindow: Successfully restored '\(savedWindow.windowTitle)'")
-        } else {
-            print("restoreWindow: Failed to restore '\(savedWindow.windowTitle)'")
-        }
+        let success = !savedWindow.windowTitle.isEmpty && moveWindowByTitle(appElement: appElement, title: savedWindow.windowTitle, to: savedWindow.frame) || moveFirstWindow(of: appElement, to: savedWindow.frame)
     }
 
     private func moveWindowByTitle(appElement: AXUIElement, title: String, to frame: CGRect) -> Bool {
@@ -460,150 +507,27 @@ class ViewController: NSViewController {
     private func setWindowFrame(_ window: AXUIElement, frame: CGRect) -> Bool {
         var positionSettable: DarwinBoolean = false
         var sizeSettable: DarwinBoolean = false
-
         AXUIElementIsAttributeSettable(window, kAXPositionAttribute as CFString, &positionSettable)
         AXUIElementIsAttributeSettable(window, kAXSizeAttribute as CFString, &sizeSettable)
-
-        guard positionSettable.boolValue && sizeSettable.boolValue else {
-            print("setWindowFrame: Position settable: \(positionSettable.boolValue), Size settable: \(sizeSettable.boolValue)")
-            return false
-        }
+        guard positionSettable.boolValue && sizeSettable.boolValue else { return false }
 
         var position = frame.origin
-        if let positionValue = AXValueCreate(.cgPoint, &position) {
-            let positionResult = AXUIElementSetAttributeValue(window, kAXPositionAttribute as CFString, positionValue)
-            if positionResult != .success {
-                print("setWindowFrame: Failed to set position to (\(frame.origin.x), \(frame.origin.y)), error: \(positionResult.rawValue)")
-                return false
-            }
-        } else {
-            print("setWindowFrame: Failed to create AXValue for position")
+        guard let positionValue = AXValueCreate(.cgPoint, &position),
+              AXUIElementSetAttributeValue(window, kAXPositionAttribute as CFString, positionValue) == .success else {
             return false
         }
 
         var size = frame.size
-        if let sizeValue = AXValueCreate(.cgSize, &size) {
-            let sizeResult = AXUIElementSetAttributeValue(window, kAXSizeAttribute as CFString, sizeValue)
-            if sizeResult != .success {
-                print("setWindowFrame: Failed to set size to (\(frame.size.width), \(frame.size.height)), error: \(sizeResult.rawValue)")
-                return false
-            }
-        } else {
-            print("setWindowFrame: Failed to create AXValue for size")
+        guard let sizeValue = AXValueCreate(.cgSize, &size),
+              AXUIElementSetAttributeValue(window, kAXSizeAttribute as CFString, sizeValue) == .success else {
             return false
         }
 
-        print("setWindowFrame: Successfully set window to frame (\(frame.origin.x), \(frame.origin.y), \(frame.size.width), \(frame.size.height))")
         return true
     }
 
     func restoreDesktopIcons(_ icons: [DesktopIconInfo]) {
-        let logger = OSLog(subsystem: "com.aaronrohrbacher.MOVE", category: "IconRestore")
-        
-        // Desktop icon restoration is disabled in macOS 26 (Tahoe)
-        os_log("restoreDesktopIcons: Desktop icon restoration is not available in macOS 26", log: logger, type: .info)
         return
-        
-        guard !icons.isEmpty else {
-            os_log("restoreDesktopIcons: icons array is empty", log: logger, type: .error)
-            return
-        }
-
-        guard ensureAccessibilityPermission(prompt: false) else {
-            os_log("restoreDesktopIcons: Accessibility permission not granted", log: logger, type: .error)
-            return
-        }
-
-        os_log("restoreDesktopIcons: Attempting to restore %d icons using Accessibility API", log: logger, type: .info, icons.count)
-        
-        // Get icon names we need to restore
-        let targetNames = Set(icons.map { $0.name })
-        
-        // Gather icon elements from Finder using Accessibility API (limit depth to reduce system calls)
-        let iconElements = gatherFinderIconElements(targetNames: targetNames, maxDepth: 6)
-        os_log("restoreDesktopIcons: Found %d icon elements in Finder", log: logger, type: .info, iconElements.count)
-        
-        // Restore each icon's position with delays to reduce system load
-        // Use a simple counter class to track progress across async closures
-        class Counter {
-            var restored = 0
-            var failed = 0
-            let total: Int
-            let lock = NSLock()
-            let logger: OSLog
-            let iconsToRestore: [DesktopIconInfo]
-            weak var viewController: ViewController?
-            
-            init(total: Int, logger: OSLog, icons: [DesktopIconInfo], viewController: ViewController) {
-                self.total = total
-                self.logger = logger
-                self.iconsToRestore = icons
-                self.viewController = viewController
-            }
-            
-            func incrementRestored() {
-                lock.lock()
-                restored += 1
-                let current = restored + failed
-                lock.unlock()
-                if current == total {
-                    os_log("restoreDesktopIcons: Completed - restored: %d, failed: %d, total: %d", log: logger, type: .info, restored, failed, total)
-                }
-            }
-            
-            func incrementFailed() {
-                lock.lock()
-                failed += 1
-                let current = restored + failed
-                let allFailed = (failed == total && restored == 0)
-                lock.unlock()
-                if current == total {
-                    os_log("restoreDesktopIcons: Completed - restored: %d, failed: %d, total: %d", log: logger, type: .info, restored, failed, total)
-                    // If all failed (likely -25200 in macOS 26), try AppleScript via Cocoa
-                    if allFailed && failed > 0 {
-                        os_log("restoreDesktopIcons: All icons failed via Accessibility API (macOS 26 restriction), trying AppleScript", log: logger, type: .info)
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-                            guard let self = self, let vc = self.viewController else { return }
-                            vc.restoreDesktopIconsViaAppleScript(icons: self.iconsToRestore)
-                        }
-                    }
-                }
-            }
-        }
-        
-        let counter = Counter(total: icons.count, logger: logger, icons: icons, viewController: self)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            for (index, icon) in icons.enumerated() {
-                // Add small delay between operations to reduce system load
-                let delay = DispatchTime.now() + .milliseconds(50 * index)
-                DispatchQueue.main.asyncAfter(deadline: delay) {
-                    guard let iconElement = iconElements[icon.name] else {
-                        os_log("restoreDesktopIcons: Icon element not found for '%{public}@'", log: logger, type: .error, icon.name)
-                        counter.incrementFailed()
-                        return
-                    }
-                    
-                    // Try to set position directly without checking settable first (reduces API calls)
-                    var position = icon.position
-                    if let positionValue = AXValueCreate(.cgPoint, &position) {
-                        let result = AXUIElementSetAttributeValue(iconElement, kAXPositionAttribute as CFString, positionValue)
-                        if result == .success {
-                            os_log("restoreDesktopIcons: Successfully restored '%{public}@' to (%.1f, %.1f)", log: logger, type: .info, icon.name, icon.position.x, icon.position.y)
-                            counter.incrementRestored()
-                        } else {
-                            // Error -25200 (kAXErrorCannotComplete) means macOS 26 blocks direct API access
-                            // Fall back to plist method
-                            os_log("restoreDesktopIcons: Accessibility API failed for '%{public}@' (error: %d), will use plist fallback", log: logger, type: .info, icon.name, result.rawValue)
-                            counter.incrementFailed()
-                        }
-                    } else {
-                        os_log("restoreDesktopIcons: Failed to create AXValue for position of '%{public}@'", log: logger, type: .error, icon.name)
-                        counter.incrementFailed()
-                    }
-                }
-            }
-        }
     }
 
     func extractDesktopIconsAndFilter(from windows: [WindowInfo])
@@ -652,9 +576,7 @@ class ViewController: NSViewController {
 
     private func readFinderDesktopIconPositions() -> [String: CGPoint] {
         let plistURL = FileManager.default.homeDirectoryForCurrentUser
-            .appendingPathComponent("Library")
-            .appendingPathComponent("Preferences")
-            .appendingPathComponent("com.apple.finder.plist")
+            .appendingPathComponent("Library/Preferences/com.apple.finder.plist")
 
         guard let data = try? Data(contentsOf: plistURL) else {
             return [:]
@@ -696,116 +618,63 @@ class ViewController: NSViewController {
     }
     
     private func restoreDesktopIconsViaAppleScript(icons: [DesktopIconInfo]) {
-        let logger = OSLog(subsystem: "com.aaronrohrbacher.MOVE", category: "IconRestore")
-        os_log("restoreDesktopIconsViaAppleScript: Attempting to restore %d icons using AppleScript", log: logger, type: .info, icons.count)
-        
-        // Build AppleScript to set all icon positions
-        var scriptLines: [String] = []
-        scriptLines.append("tell application \"Finder\"")
-        scriptLines.append("    activate")
-        
+        var scriptLines = ["tell application \"Finder\"", "    activate"]
         for icon in icons {
-            // Escape special characters in filename for AppleScript
-            let escapedName = icon.name.replacingOccurrences(of: "\\", with: "\\\\")
-                .replacingOccurrences(of: "\"", with: "\\\"")
+            let escapedName = icon.name.replacingOccurrences(of: "\\", with: "\\\\").replacingOccurrences(of: "\"", with: "\\\"")
             scriptLines.append("    try")
             scriptLines.append("        set desktopItem to item \"\(escapedName)\" of desktop")
             scriptLines.append("        set position of desktopItem to {\(Int(icon.position.x)), \(Int(icon.position.y))}")
             scriptLines.append("    on error")
-            scriptLines.append("        -- Icon not found, skip")
             scriptLines.append("    end try")
         }
-        
         scriptLines.append("end tell")
-        let scriptSource = scriptLines.joined(separator: "\n")
         
-        // Log the script for debugging (first 500 chars)
-        let scriptPreview = scriptSource.count > 500 ? String(scriptSource.prefix(500)) + "..." : scriptSource
-        os_log("restoreDesktopIconsViaAppleScript: Script source (preview): %{public}@", log: logger, type: .debug, scriptPreview)
-        
-        guard let appleScript = NSAppleScript(source: scriptSource) else {
-            os_log("restoreDesktopIconsViaAppleScript: Failed to create AppleScript from source", log: logger, type: .error)
-            // Fall back to plist if AppleScript fails
+        guard let appleScript = NSAppleScript(source: scriptLines.joined(separator: "\n")) else {
             writeIconsToPlistAndRestartFinder(icons: icons)
             return
         }
         
         var error: NSDictionary?
-        let result = appleScript.executeAndReturnError(&error)
-        
-        if let error = error {
-            let errorCode = error[NSAppleScript.errorNumber] as? Int ?? -1
-            let errorMessage = error[NSAppleScript.errorMessage] as? String ?? "Unknown error"
-            let errorApp = error[NSAppleScript.errorAppName] as? String ?? "Unknown app"
-            os_log("restoreDesktopIconsViaAppleScript: AppleScript error - Code: %d, Message: %{public}@, App: %{public}@", log: logger, type: .error, errorCode, errorMessage, errorApp)
-            os_log("restoreDesktopIconsViaAppleScript: Full error dict: %{public}@", log: logger, type: .error, error.description)
-            // Fall back to plist if AppleScript fails
+        appleScript.executeAndReturnError(&error)
+        if error != nil {
             writeIconsToPlistAndRestartFinder(icons: icons)
-        } else {
-            let resultString = result.stringValue ?? "nil"
-            os_log("restoreDesktopIconsViaAppleScript: Successfully executed AppleScript (result: %{public}@)", log: logger, type: .info, resultString)
         }
     }
     
     private func writeIconsToPlistAndRestartFinder(icons: [DesktopIconInfo]) {
-        let logger = OSLog(subsystem: "com.aaronrohrbacher.MOVE", category: "IconRestore")
         let plistURL = FileManager.default.homeDirectoryForCurrentUser
-            .appendingPathComponent("Library")
-            .appendingPathComponent("Preferences")
-            .appendingPathComponent("com.apple.finder.plist")
+            .appendingPathComponent("Library/Preferences/com.apple.finder.plist")
         
-        os_log("writeIconsToPlistAndRestartFinder: Writing %d icon positions to plist", log: logger, type: .info, icons.count)
-        
-        // Read existing plist
         guard let data = try? Data(contentsOf: plistURL),
               var plist = try? PropertyListSerialization.propertyList(from: data, options: .mutableContainersAndLeaves, format: nil) as? [String: Any] else {
-            os_log("writeIconsToPlistAndRestartFinder: Failed to read plist", log: logger, type: .error)
             return
         }
         
-        // Navigate/create the nested structure
         var desktop = plist["DesktopViewSettings"] as? [String: Any] ?? [:]
         var stdView = desktop["StandardViewSettings"] as? [String: Any] ?? [:]
         var iconView = stdView["IconViewSettings"] as? [String: Any] ?? [:]
         var positions = iconView["IconPositions"] as? [String: Any] ?? [:]
         
-        // Update positions for all icons
         for icon in icons {
-            positions[icon.name] = [
-                "x": icon.position.x,
-                "y": icon.position.y,
-                "Container": "Desktop"
-            ]
-            os_log("writeIconsToPlistAndRestartFinder: Added position for '%{public}@' at (%.1f, %.1f)", log: logger, type: .info, icon.name, icon.position.x, icon.position.y)
+            positions[icon.name] = ["x": icon.position.x, "y": icon.position.y, "Container": "Desktop"]
         }
         
-        // Write back
         iconView["IconPositions"] = positions
         stdView["IconViewSettings"] = iconView
         desktop["StandardViewSettings"] = stdView
         plist["DesktopViewSettings"] = desktop
         
-        // Save plist
-        do {
-            let newData = try PropertyListSerialization.data(fromPropertyList: plist, format: .binary, options: 0)
-            try newData.write(to: plistURL)
-            os_log("writeIconsToPlistAndRestartFinder: Successfully wrote plist", log: logger, type: .info)
-            
-            // Restart Finder to apply changes
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                let process = Process()
-                process.launchPath = "/usr/bin/killall"
-                process.arguments = ["Finder"]
-                do {
-                    try process.run()
-                    process.waitUntilExit()
-                    os_log("writeIconsToPlistAndRestartFinder: Restarted Finder", log: logger, type: .info)
-                } catch {
-                    os_log("writeIconsToPlistAndRestartFinder: Failed to restart Finder: %{public}@", log: logger, type: .error, error.localizedDescription)
-                }
-            }
-        } catch {
-            os_log("writeIconsToPlistAndRestartFinder: Failed to write plist: %{public}@", log: logger, type: .error, error.localizedDescription)
+        guard let newData = try? PropertyListSerialization.data(fromPropertyList: plist, format: .binary, options: 0),
+              (try? newData.write(to: plistURL)) != nil else {
+            return
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            let process = Process()
+            process.launchPath = "/usr/bin/killall"
+            process.arguments = ["Finder"]
+            try? process.run()
+            process.waitUntilExit()
         }
     }
 
@@ -998,7 +867,6 @@ class ViewController: NSViewController {
 
     private func finderApplicationElement() -> AXUIElement? {
         guard let finder = NSWorkspace.shared.runningApplications.first(where: { $0.bundleIdentifier == "com.apple.finder" }) else {
-            print("Finder is not running")
             return nil
         }
         return AXUIElementCreateApplication(finder.processIdentifier)
@@ -1007,22 +875,11 @@ class ViewController: NSViewController {
     private func setFinderIcon(_ element: AXUIElement, to position: CGPoint) -> Bool {
         var settable: DarwinBoolean = false
         AXUIElementIsAttributeSettable(element, kAXPositionAttribute as CFString, &settable)
-        guard settable.boolValue else {
-            print("setFinderIcon: Position attribute is not settable")
-            return false
-        }
+        guard settable.boolValue else { return false }
 
         var mutablePosition = position
-        guard let value = AXValueCreate(.cgPoint, &mutablePosition) else {
-            print("setFinderIcon: Failed to create AXValue for position \(position)")
-            return false
-        }
-        
-        let result = AXUIElementSetAttributeValue(element, kAXPositionAttribute as CFString, value)
-        if result != .success {
-            print("setFinderIcon: AXUIElementSetAttributeValue failed with error: \(result.rawValue)")
-        }
-        return result == .success
+        guard let value = AXValueCreate(.cgPoint, &mutablePosition) else { return false }
+        return AXUIElementSetAttributeValue(element, kAXPositionAttribute as CFString, value) == .success
     }
 
     private func bringFinderToFront() {
@@ -1030,14 +887,5 @@ class ViewController: NSViewController {
             finderApp.activate(options: [.activateIgnoringOtherApps])
         }
     }
-    
-    private func printRestoreResults(movedCount: Int, totalCount: Int, failedIcons: [String]) {
-        print("restoreDesktopIcons: Moved \(movedCount) of \(totalCount) icons")
-        if !failedIcons.isEmpty {
-            print("restoreDesktopIcons: Failed icons: \(failedIcons)")
-        }
-    }
-    
-
 }
 

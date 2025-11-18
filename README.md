@@ -8,16 +8,16 @@ YA window manager for MacOS, inspired by annoyingly strict cutoff dates to pay f
 
 - Save window positions and sizes for all open applications
 - Applications holding a window position in a layout are automatically reopened.
-- Restore entire window layouts instantly (actually relatively slowly as it stands)
-- Optional desktop icon positions - keep files you need close for the task you're doing.
+- Restore entire window layouts instantly (actually relatively slowly as it stands). Customize hotkeys (such as cmd + U) for on-the-fly layout restoration.
+- Optional desktop icon positions - keep files you need close for the task you're doing. (Not supported in MacOS 26, feature may go away).
 - Multiple saved layouts
 - Hotkey programming directly in the layout list.
-- Initial grid system. Customiztion coming to the next release! Stay tuned! 
+- Tiling solution. Move windows to a grid of 4, 8, or 12 (naming under reconsideration). Choose "Upper," "Middle," or "Lower" to allow only one row (divided by the number of tiles selected - needs some TLC here, but it's working well. Next on my list.)
+- MOVE can now live in the menu bar, or in the dock. Up to you. 
 
 ## Requirements
 
-- macOS (requires Accessibility permissions). Tested only on 26 thus far - I'm a Swift newb, learning how to branch across versions in testing. Fuller support promised and coming soon.
-
+- macOS (requires Accessibility permissions). Tested only on 26 thus far 
 ## Installation
 
 Coming Soon to the Mac App Store, in the Releases section here, or grab the source code and have a hay day! Contributions are welcome! As mentioned, the codebase is somewhat brute-force. I'd love some input on proper APIs for these tasks that I have fallbacks for.
@@ -25,7 +25,7 @@ Coming Soon to the Mac App Store, in the Releases section here, or grab the sour
 ## Roadmap
 * Add customization to grids, allow granular control over where windows fly, with multiple hotkeys for each.
 * Add other desktop customization features for colors, backgrounds (neon or whatever the crap Apple's calling it now. Liquid ooze...)
-* Allow the app to live in the dock, or in the menu bar thinger, interchangably and customizedably.
+
 * System monitor widgets or other medium - others are shitting the bed on this simple concept.
 * Add testing for previous OS's
 * Add a help section, feedback form

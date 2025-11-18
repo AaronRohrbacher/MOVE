@@ -22,7 +22,6 @@ class HotkeyManager {
 
         print("HotkeyManager: Registering hotkey - keyCode: \(hotkey.keyCode), modifiers: \(hotkey.modifiers), key: \(key), layoutIndex: \(index)")
 
-        // Unregister any existing hotkey for this layout index
         if let existingKey = layoutIndices.first(where: { $0.value == index })?.key {
             print("HotkeyManager: Removing existing hotkey for layout \(index): \(existingKey)")
             hotkeyHandlers.removeValue(forKey: existingKey)
@@ -68,11 +67,9 @@ class HotkeyManager {
     private func startMonitoring() {
         guard globalMonitor == nil && localMonitor == nil else { return }
 
-        // Check for accessibility permissions
         let hasAccessibility = AXIsProcessTrustedWithOptions([kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: false] as CFDictionary)
         print("HotkeyManager: Accessibility permissions: \(hasAccessibility ? "GRANTED" : "DENIED")")
 
-        // Global monitor for when app is in background (requires accessibility permissions)
         if hasAccessibility {
             globalMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.keyDown, .flagsChanged]) { [weak self] event in
                 self?.handleEvent(event)
@@ -82,10 +79,9 @@ class HotkeyManager {
             print("HotkeyManager: Global monitor NOT started - no accessibility permissions")
         }
 
-        // Local monitor for when app is active (always works)
         localMonitor = NSEvent.addLocalMonitorForEvents(matching: [.keyDown, .flagsChanged]) { [weak self] event in
             self?.handleEvent(event)
-            return event // Don't consume local events
+            return event
         }
         print("HotkeyManager: Local monitor started")
     }
@@ -102,17 +98,14 @@ class HotkeyManager {
     }
     
     private func handleEvent(_ event: NSEvent) {
-        // Handle both keyDown and flagsChanged events
         let keyCode = event.keyCode
         let modifiers = event.modifierFlags.intersection([.command, .shift, .option, .control])
         let normalizedModifiers = HotkeyManager.normalizeModifiers(modifiers)
 
         let key = "\(keyCode)_\(normalizedModifiers)"
 
-        // Debug logging
         print("HotkeyManager: Event type: \(event.type.rawValue), keyCode: \(keyCode), modifiers: \(String(format: "0x%X", modifiers.rawValue)), normalized: \(String(format: "0x%X", normalizedModifiers)), key: \(key)")
 
-        // Only trigger on keyDown events (when a key is actually pressed)
         if event.type == .keyDown {
             print("HotkeyManager: Registered handlers: \(Array(hotkeyHandlers.keys))")
 

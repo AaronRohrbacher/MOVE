@@ -8,110 +8,127 @@ extension ViewController: NSTableViewDataSource {
 }
 
 extension ViewController: NSTableViewDelegate {
-    // Allow controls in cells to become first responder immediately
     func tableView(_ tableView: NSTableView, shouldSelectRow row: Int) -> Bool {
         return true
     }
+
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         guard row < savedLayouts.count else { return nil }
         let layout = savedLayouts[row]
 
-        // Debug: Write to file
-        let debugString = "TableView: Creating cell for row \(row), column: \(tableColumn?.identifier.rawValue ?? "nil"), layouts count: \(savedLayouts.count)\n"
-        if let data = debugString.data(using: .utf8) {
-            let fileURL = URL(fileURLWithPath: "/tmp/move_debug.log")
-            if FileManager.default.fileExists(atPath: fileURL.path) {
-                let fileHandle = try? FileHandle(forWritingTo: fileURL)
-                fileHandle?.seekToEndOfFile()
-                fileHandle?.write(data)
-                fileHandle?.closeFile()
-            } else {
-                try? data.write(to: fileURL)
-            }
-        }
+        if tableColumn?.identifier.rawValue == "layoutName" {
+            if let cellView = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier("LayoutCell"), owner: self) as? LayoutTableCellView {
+                let iconIndicator = layout.includeDesktopIcons ? "🖥️ " : ""
+                let windowCount = layout.windows.count
+                let iconCount = layout.desktopIcons?.count ?? 0
 
-        // Handle different columns
-        if tableColumn?.identifier.rawValue == "hotkey" {
-            // Hotkey column - NSButton as cell view (standard Apple pattern)
-            let button = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier("HotkeyButton"), owner: self) as? NSButton ?? {
-                let btn = NSButton()
-                btn.identifier = NSUserInterfaceItemIdentifier("HotkeyButton")
-                btn.bezelStyle = .rounded
-                btn.isBordered = false
-                btn.font = NSFont.systemFont(ofSize: 11)
-                btn.alignment = .right
-                btn.wantsLayer = true
-                btn.layer?.cornerRadius = 6
-                btn.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
-                btn.layer?.borderWidth = 1.0
-                btn.layer?.borderColor = NSColor.separatorColor.cgColor
-                btn.target = self
-                btn.action = #selector(hotkeyButtonClicked(_:))
-                return btn
-            }()
+                var infoParts = ["\(windowCount) window\(windowCount == 1 ? "" : "s")"]
+                if iconCount > 0 {
+                    infoParts.append("\(iconCount) icon\(iconCount == 1 ? "" : "s")")
+                }
 
-            button.tag = row
-            let hotkeyText = layout.hotkey?.keyString ?? "Click to set hotkey"
-            button.title = hotkeyText
-            button.contentTintColor = layout.hotkey != nil ? .controlAccentColor : .secondaryLabelColor
+                cellView.configure(
+                    title: "\(iconIndicator)\(layout.name)",
+                    info: infoParts.joined(separator: ", ")
+                )
 
-            return button
-        } else {
-            // Layout name column - create cell with title and info
-            var cellView = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier("LayoutCell"), owner: self) as? NSTableCellView
-
-            if cellView == nil {
-                cellView = NSTableCellView()
-                cellView?.identifier = NSUserInterfaceItemIdentifier("LayoutCell")
-
-                // Title field
-                let titleField = NSTextField(labelWithString: "")
-                titleField.translatesAutoresizingMaskIntoConstraints = false
-                titleField.font = NSFont.systemFont(ofSize: 13)
-                titleField.lineBreakMode = .byTruncatingTail
-                cellView?.addSubview(titleField)
-                cellView?.textField = titleField
-
-                // Info field
-                let infoField = NSTextField(labelWithString: "")
-                infoField.translatesAutoresizingMaskIntoConstraints = false
-                infoField.font = NSFont.systemFont(ofSize: 10)
-                infoField.textColor = NSColor.secondaryLabelColor
-                infoField.lineBreakMode = .byTruncatingTail
-                cellView?.addSubview(infoField)
-
-                NSLayoutConstraint.activate([
-                    titleField.leadingAnchor.constraint(equalTo: cellView!.leadingAnchor, constant: 5),
-                    titleField.trailingAnchor.constraint(equalTo: cellView!.trailingAnchor, constant: -5),
-                    titleField.topAnchor.constraint(equalTo: cellView!.topAnchor, constant: 6),
-
-                    infoField.leadingAnchor.constraint(equalTo: cellView!.leadingAnchor, constant: 5),
-                    infoField.trailingAnchor.constraint(equalTo: cellView!.trailingAnchor, constant: -5),
-                    infoField.topAnchor.constraint(equalTo: titleField.bottomAnchor, constant: 2),
-                    infoField.bottomAnchor.constraint(lessThanOrEqualTo: cellView!.bottomAnchor, constant: -6)
-                ])
+                return cellView
             }
 
-            // Configure with layout data
+            let cellView = NSTableCellView()
+            cellView.identifier = NSUserInterfaceItemIdentifier("LayoutCell")
+
+            let titleField = NSTextField(labelWithString: "")
+            titleField.translatesAutoresizingMaskIntoConstraints = false
+            titleField.font = NSFont.systemFont(ofSize: 13)
+            titleField.lineBreakMode = .byTruncatingTail
+            cellView.addSubview(titleField)
+            cellView.textField = titleField
+
+            let infoField = NSTextField(labelWithString: "")
+            infoField.translatesAutoresizingMaskIntoConstraints = false
+            infoField.font = NSFont.systemFont(ofSize: 10)
+            infoField.textColor = NSColor.secondaryLabelColor
+            infoField.lineBreakMode = .byTruncatingTail
+            cellView.addSubview(infoField)
+
+            NSLayoutConstraint.activate([
+                titleField.leadingAnchor.constraint(equalTo: cellView.leadingAnchor, constant: 5),
+                titleField.trailingAnchor.constraint(equalTo: cellView.trailingAnchor, constant: -5),
+                titleField.topAnchor.constraint(equalTo: cellView.topAnchor, constant: 6),
+
+                infoField.leadingAnchor.constraint(equalTo: cellView.leadingAnchor, constant: 5),
+                infoField.trailingAnchor.constraint(equalTo: cellView.trailingAnchor, constant: -5),
+                infoField.topAnchor.constraint(equalTo: titleField.bottomAnchor, constant: 2),
+                infoField.bottomAnchor.constraint(lessThanOrEqualTo: cellView.bottomAnchor, constant: -6)
+            ])
+
             let iconIndicator = layout.includeDesktopIcons ? "🖥️ " : ""
             let windowCount = layout.windows.count
             let iconCount = layout.desktopIcons?.count ?? 0
 
-            cellView?.textField?.stringValue = "\(iconIndicator)\(layout.name)"
+            titleField.stringValue = "\(iconIndicator)\(layout.name)"
 
-            var infoParts: [String] = []
-            infoParts.append("\(windowCount) window\(windowCount == 1 ? "" : "s")")
+            var infoParts = ["\(windowCount) window\(windowCount == 1 ? "" : "s")"]
             if iconCount > 0 {
                 infoParts.append("\(iconCount) icon\(iconCount == 1 ? "" : "s")")
             }
 
-            // Find info field (second text field in cell)
-            if let infoField = cellView?.subviews.compactMap({ $0 as? NSTextField }).first(where: { $0 != cellView?.textField }) {
-                infoField.stringValue = infoParts.joined(separator: ", ")
-            }
+            infoField.stringValue = infoParts.joined(separator: ", ")
 
             return cellView
+        } else if tableColumn?.identifier.rawValue == "hotkey" {
+            if let cellView = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier("HotkeyButton"), owner: self) as? HotkeyTableCellView,
+               cellView.hotkeyButton != nil {
+                let defaultText = (tableColumn?.dataCell as? NSTextFieldCell)?.title ?? "Click to set hotkey"
+                cellView.configure(
+                    with: layout.hotkey?.keyString,
+                    defaultText: defaultText,
+                    row: row,
+                    target: self,
+                    action: #selector(hotkeyButtonClicked(_:))
+                )
+                return cellView
+            } else {
+                let button = NSButton()
+                button.identifier = NSUserInterfaceItemIdentifier("HotkeyButton")
+
+                if let template = hotkeyButtonTemplate {
+                    button.bezelStyle = template.bezelStyle
+                    button.isBordered = template.isBordered
+                    button.font = template.font
+                    button.alignment = template.alignment
+                    button.wantsLayer = template.wantsLayer
+                    if let templateLayer = template.layer {
+                        button.layer?.cornerRadius = templateLayer.cornerRadius
+                        button.layer?.backgroundColor = templateLayer.backgroundColor
+                        button.layer?.borderWidth = templateLayer.borderWidth
+                        button.layer?.borderColor = templateLayer.borderColor
+                    }
+                } else {
+                    button.bezelStyle = .rounded
+                    button.isBordered = false
+                    button.font = NSFont.systemFont(ofSize: 11)
+                    button.alignment = .center
+                    button.wantsLayer = true
+                    button.layer?.cornerRadius = 3
+                    button.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
+                    button.layer?.borderWidth = 1.0
+                    button.layer?.borderColor = NSColor.separatorColor.cgColor
+                }
+
+                button.target = self
+                button.action = #selector(hotkeyButtonClicked(_:))
+                button.tag = row
+                let defaultText = hotkeyButtonTemplate?.title ?? (tableColumn?.dataCell as? NSTextFieldCell)?.title ?? "Click to set hotkey"
+                let hotkeyText = layout.hotkey?.keyString ?? defaultText
+                button.title = hotkeyText
+                button.contentTintColor = layout.hotkey != nil ? .controlAccentColor : .secondaryLabelColor
+                return button
+            }
         }
+
+        return nil
     }
 
     func tableView(_: NSTableView, heightOfRow _: Int) -> CGFloat {
@@ -121,7 +138,6 @@ extension ViewController: NSTableViewDelegate {
     private func registerHotkeyForLayout(at index: Int) {
         guard index >= 0 && index < savedLayouts.count else { return }
         guard let hotkey = savedLayouts[index].hotkey else {
-            // Unregister if no hotkey
             HotkeyManager.shared.unregisterHotkeyForLayout(at: index)
             return
         }
@@ -141,7 +157,6 @@ extension ViewController: NSTableViewDelegate {
     }
 
     func registerAllHotkeys() {
-        // Unregister all first to avoid duplicates
         HotkeyManager.shared.unregisterAll()
         for (index, layout) in savedLayouts.enumerated() {
             if layout.hotkey != nil {

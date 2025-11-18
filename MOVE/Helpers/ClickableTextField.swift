@@ -27,23 +27,19 @@ class ClickableTextField: NSTextField {
     }
     
     override func mouseDown(with event: NSEvent) {
-        // Call the onClick handler immediately
         onClick?()
-        // Don't call super to prevent default text field behavior
     }
     
     override func mouseUp(with event: NSEvent) {
-        // Don't call super to prevent default behavior
     }
     
     override func hitTest(_ point: NSPoint) -> NSView? {
-        // Ensure we can receive clicks - return self if point is in bounds
         let pointInBounds = convert(point, from: superview)
         return bounds.contains(pointInBounds) ? self : super.hitTest(point)
     }
     
     override var acceptsFirstResponder: Bool {
-        return false // We don't need to be first responder, just handle clicks
+        return false
     }
     
     override func acceptsFirstMouse(for event: NSEvent?) -> Bool {

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="22755"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner"/>
+        <customObject id="-1" userLabel="First Responder" customClass="NSResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="HotkeyTableCellView" customClass="HotkeyTableCellView" customModule="MOVE" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="130" height="52"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hotkey-button">
+                    <rect key="frame" x="10" y="18" width="110" height="16"/>
+                    <buttonCell key="cell" type="push" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="hotkey-button-cell">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="smallSystem"/>
+                        <string key="title">Click to set hotkey</string>
+                    </buttonCell>
+                    <color key="bezelColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="16" id="hotkey-height"/>
+                    </constraints>
+                </button>
+            </subviews>
+            <constraints>
+                <constraint firstItem="hotkey-button" firstAttribute="leading" secondItem="HotkeyTableCellView" secondAttribute="leading" constant="10" id="hotkey-leading"/>
+                <constraint firstItem="hotkey-button" firstAttribute="trailing" secondItem="HotkeyTableCellView" secondAttribute="trailing" constant="-10" id="hotkey-trailing"/>
+                <constraint firstItem="hotkey-button" firstAttribute="centerY" secondItem="HotkeyTableCellView" secondAttribute="centerY" id="hotkey-center-y"/>
+            </constraints>
+            <point key="canvasLocation" x="75" y="0.0"/>
+        </customView>
+    </objects>
+    <connections>
+        <outlet property="hotkeyButton" destination="hotkey-button" id="hotkey-outlet"/>
+    </connections>
+</document>
+
+

@@ -17,7 +17,6 @@ else {
     exit(1)
 }
 
-// Navigate into the nested dictionaries
 if let desktop = plist["DesktopViewSettings"] as? [String: Any] {
     print("✓ Found DesktopViewSettings")
     
@@ -43,7 +42,6 @@ if let desktop = plist["DesktopViewSettings"] as? [String: Any] {
             } else {
                 print("✗ IconPositions not found - creating empty structure...")
                 
-                // Create the IconPositions key
                 var iconView = stdView["IconViewSettings"] as? [String: Any] ?? [:]
                 iconView["IconPositions"] = [String: Any]()
                 
@@ -55,7 +53,6 @@ if let desktop = plist["DesktopViewSettings"] as? [String: Any] {
                 
                 plist["DesktopViewSettings"] = desktop
                 
-                // Write it back
                 do {
                     let newData = try PropertyListSerialization.data(fromPropertyList: plist, format: .binary, options: 0)
                     try newData.write(to: plistURL)
@@ -77,7 +74,6 @@ if let desktop = plist["DesktopViewSettings"] as? [String: Any] {
 
 print("\n---\n")
 
-// Also list what's actually on the desktop
 let desktopPath = NSHomeDirectory() + "/Desktop"
 if let contents = try? FileManager.default.contentsOfDirectory(atPath: desktopPath) {
     print("Files on Desktop:")

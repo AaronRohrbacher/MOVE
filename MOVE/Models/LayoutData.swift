@@ -13,7 +13,7 @@ struct LayoutData: Codable {
 struct HotkeyData: Codable {
     let keyCode: UInt16
     let modifiers: UInt
-    let keyString: String // Human-readable string like "⌘⇧1"
+    let keyString: String
 }
 
 

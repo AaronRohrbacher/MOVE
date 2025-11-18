@@ -680,7 +680,7 @@
                 <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75" y="0.0"/>
+            <point key="canvasLocation" x="738" y="-208"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
@@ -701,26 +701,18 @@
                 </windowController>
                 <customObject id="Oky-zY-oP4" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="21" y="147"/>
+            <point key="canvasLocation" x="729" y="88"/>
         </scene>
         <!--MOVE-->
         <scene sceneID="Q7g-JO-DND">
             <objects>
                 <viewController title="MOVE" storyboardIdentifier="ViewController" showSeguePresentationStyle="single" id="hIl-yz-18R" customClass="ViewController" customModule="MOVE" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" wantsLayer="YES" id="r7d-et-ARg">
-                        <rect key="frame" x="0.0" y="0.0" width="794" height="527"/>
+                    <view key="view" autoresizesSubviews="NO" wantsLayer="YES" id="r7d-et-ARg">
+                        <rect key="frame" x="0.0" y="0.0" width="856" height="527"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LAX-i3-BI2">
-                                <rect key="frame" x="20" y="436" width="71" height="71"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="74" id="NFt-HS-faY"/>
-                                    <constraint firstAttribute="width" constant="75" id="iIk-px-M2m"/>
-                                </constraints>
-                                <imageCell key="cell" alignment="center" animates="YES" imageAlignment="left" image="NSApplicationIcon" id="0ZA-R2-IL6"/>
-                            </imageView>
                             <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gcj-t4-rut">
-                                <rect key="frame" x="36" y="24" width="103" height="24"/>
+                                <rect key="frame" x="20" y="24" width="103" height="24"/>
                                 <buttonCell key="cell" type="push" title="Apply Layout" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="4g3-TG-cwu">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -728,7 +720,7 @@
                                 <color key="bezelColor" name="AccentColor"/>
                             </button>
                             <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FaE-MX-YLc">
-                                <rect key="frame" x="292" y="24" width="108" height="24"/>
+                                <rect key="frame" x="374" y="24" width="108" height="24"/>
                                 <buttonCell key="cell" type="push" title="Delete Layout" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="LAi-Vb-UBQ">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -736,18 +728,18 @@
                                 <color key="bezelColor" name="systemRedColor" catalog="System" colorSpace="catalog"/>
                             </button>
                             <scrollView misplaced="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" scrollerKnobStyle="dark" translatesAutoresizingMaskIntoConstraints="NO" id="Kah-V6-SZR">
-                                <rect key="frame" x="36" y="60" width="364" height="315"/>
+                                <rect key="frame" x="20" y="56" width="462" height="319"/>
                                 <clipView key="contentView" autoresizesSubviews="NO" drawsBackground="NO" id="O3T-Vc-dwl">
-                                    <rect key="frame" x="1" y="1" width="362" height="313"/>
+                                    <rect key="frame" x="1" y="1" width="460" height="317"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="layouts-table-view">
-                                            <rect key="frame" x="0.0" y="0.0" width="362" height="313"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="460" height="317"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <tableColumns>
-                                                <tableColumn identifier="layoutName" width="200" minWidth="40" maxWidth="1000" id="layout-name-column">
+                                                <tableColumn identifier="layoutName" width="248" minWidth="40" maxWidth="1000" id="layout-name-column">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                     </tableHeaderCell>
@@ -757,12 +749,12 @@
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                     </textFieldCell>
                                                 </tableColumn>
-                                                <tableColumn identifier="hotkey" width="120" minWidth="80" maxWidth="200" id="hotkey-column">
+                                                <tableColumn identifier="hotkey" width="189" minWidth="80" maxWidth="200" id="hotkey-column">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="right" title="Hotkey">
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                     </tableHeaderCell>
-                                                    <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="NO" editable="NO" title="Click to set hotkey" alignment="right" id="hotkey-cell">
-                                                        <font key="font" metaFont="system" size="11"/>
+                                                    <textFieldCell key="dataCell" lineBreakMode="truncatingTail" alignment="right" title="Click to set hotkey" id="hotkey-cell">
+                                                        <font key="font" metaFont="smallSystem"/>
                                                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                     </textFieldCell>
@@ -773,7 +765,7 @@
                                     <nil key="backgroundColor"/>
                                 </clipView>
                                 <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="Py0-2t-8Mb">
-                                    <rect key="frame" x="1" y="288" width="253" height="17"/>
+                                    <rect key="frame" x="1" y="301" width="460" height="17"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="xXy-zR-cv8">
@@ -781,19 +773,8 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
-                            <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mll-tv-XeJ">
-                                <rect key="frame" x="128" y="385" width="180" height="24"/>
-                                <buttonCell key="cell" type="push" title="Save Desktop to Layout" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="cXh-Je-e3j">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                                <color key="bezelColor" name="AccentColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="180" id="kbW-4e-Cck"/>
-                                </constraints>
-                            </button>
                             <customView misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="grid-icon-8-bg">
-                                <rect key="frame" x="576" y="152" width="55" height="55"/>
+                                <rect key="frame" x="654" y="178" width="55" height="55"/>
                                 <subviews>
                                     <button wantsLayer="YES" tag="8" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="grid-icon-8">
                                         <rect key="frame" x="0.0" y="0.0" width="55" height="55"/>
@@ -817,7 +798,7 @@
                                 </constraints>
                             </customView>
                             <customView misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="grid-icon-12-bg">
-                                <rect key="frame" x="693" y="152" width="55" height="55"/>
+                                <rect key="frame" x="771" y="178" width="55" height="55"/>
                                 <subviews>
                                     <button wantsLayer="YES" tag="12" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="grid-icon-12">
                                         <rect key="frame" x="0.0" y="0.0" width="55" height="55"/>
@@ -841,7 +822,7 @@
                                 </constraints>
                             </customView>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="grid-label-4">
-                                <rect key="frame" x="458" y="136" width="55" height="16"/>
+                                <rect key="frame" x="536" y="162" width="55" height="16"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="51" id="veN-re-9lS"/>
                                 </constraints>
@@ -852,7 +833,7 @@
                                 </textFieldCell>
                             </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="grid-label-8">
-                                <rect key="frame" x="576" y="136" width="55" height="16"/>
+                                <rect key="frame" x="654" y="162" width="55" height="16"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="51" id="w6C-5T-Ow9"/>
                                 </constraints>
@@ -863,7 +844,7 @@
                                 </textFieldCell>
                             </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="grid-label-12">
-                                <rect key="frame" x="693" y="136" width="55" height="16"/>
+                                <rect key="frame" x="771" y="162" width="55" height="16"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="51" id="JyV-6X-il8"/>
                                 </constraints>
@@ -874,7 +855,7 @@
                                 </textFieldCell>
                             </textField>
                             <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="row-button-upper">
-                                <rect key="frame" x="458" y="108" width="65" height="24"/>
+                                <rect key="frame" x="536" y="118" width="65" height="24"/>
                                 <buttonCell key="cell" type="push" title="Upper" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="row-button-upper-cell">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -884,7 +865,7 @@
                                 </constraints>
                             </button>
                             <button tag="1" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="row-button-middle">
-                                <rect key="frame" x="533" y="108" width="65" height="24"/>
+                                <rect key="frame" x="611" y="118" width="65" height="24"/>
                                 <buttonCell key="cell" type="push" title="Middle" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="row-button-middle-cell">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -894,7 +875,7 @@
                                 </constraints>
                             </button>
                             <button tag="2" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="row-button-lower">
-                                <rect key="frame" x="608" y="108" width="65" height="24"/>
+                                <rect key="frame" x="686" y="118" width="65" height="24"/>
                                 <buttonCell key="cell" type="push" title="Lower" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="row-button-lower-cell">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -904,37 +885,29 @@
                                 </constraints>
                             </button>
                             <button tag="3" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="row-button-none">
-                                <rect key="frame" x="683" y="108" width="65" height="24"/>
+                                <rect key="frame" x="761" y="118" width="65" height="24"/>
                                 <buttonCell key="cell" type="push" title="None" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="row-button-none-cell">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                             </button>
                             <stepper misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="additional-rows-stepper">
-                                <rect key="frame" x="458" y="60" width="19" height="28"/>
+                                <rect key="frame" x="536" y="70" width="19" height="28"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="19" id="ixl-1C-K6Q"/>
                                 </constraints>
                                 <stepperCell key="cell" baseWritingDirection="leftToRight" alignment="left" increment="0.0" autorepeat="NO"/>
                             </stepper>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="additional-rows-label">
-                                <rect key="frame" x="483" y="63" width="200" height="17"/>
+                                <rect key="frame" x="561" y="73" width="200" height="17"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="No additional rows" id="additional-rows-label-cell">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="apply-grid-button">
-                                <rect key="frame" x="458" y="20" width="300" height="32"/>
-                                <buttonCell key="cell" type="push" title="Apply Grid" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="apply-grid-button-cell">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                                <color key="bezelColor" name="AccentColor"/>
-                            </button>
                             <customView misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="grid-icon-4-bg">
-                                <rect key="frame" x="458" y="152" width="55" height="55"/>
+                                <rect key="frame" x="536" y="178" width="55" height="55"/>
                                 <subviews>
                                     <button wantsLayer="YES" tag="4" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="grid-icon-4">
                                         <rect key="frame" x="0.0" y="0.0" width="55" height="55"/>
@@ -958,34 +931,61 @@
                                 </constraints>
                             </customView>
                             <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="background-mode-control">
-                                <rect key="frame" x="600" y="480" width="150" height="24"/>
-                                <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fit" id="background-mode-cell">
+                                <rect key="frame" x="686" y="483" width="150" height="24"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="24" id="bg-mode-height"/>
+                                    <constraint firstAttribute="width" constant="150" id="bg-mode-width"/>
+                                </constraints>
+                                <segmentedCell key="cell" borderStyle="border" alignment="left" style="automatic" trackingMode="selectOne" id="background-mode-cell">
                                     <segments>
                                         <segment label="Dock"/>
                                         <segment label="Menu Bar"/>
                                     </segments>
                                 </segmentedCell>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="150" id="bg-mode-width"/>
-                                    <constraint firstAttribute="height" constant="24" id="bg-mode-height"/>
-                                </constraints>
                                 <connections>
                                     <action selector="backgroundModeChanged:" target="hIl-yz-18R" id="bg-mode-action"/>
                                 </connections>
                             </segmentedControl>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="start-on-login-checkbox">
-                                <rect key="frame" x="600" y="450" width="120" height="18"/>
-                                <buttonCell key="cell" type="switch" title="Start on Login" bezelStyle="rounded" alignment="left" controlSize="small" state="on" id="start-on-login-cell">
+                                <rect key="frame" x="756" y="457" width="120" height="18"/>
+                                <buttonCell key="cell" type="bevel" title="Start on Login" bezelStyle="rounded" alignment="left" controlSize="small" state="on" id="start-on-login-cell">
                                     <behavior key="behavior" changeContents="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="smallSystem"/>
                                 </buttonCell>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="120" id="login-checkbox-width"/>
                                     <constraint firstAttribute="height" constant="18" id="login-checkbox-height"/>
+                                    <constraint firstAttribute="width" constant="120" id="login-checkbox-width"/>
                                 </constraints>
                                 <connections>
                                     <action selector="startOnLoginChanged:" target="hIl-yz-18R" id="start-on-login-action"/>
                                 </connections>
+                            </button>
+                            <imageView translatesAutoresizingMaskIntoConstraints="NO" id="LAX-i3-BI2">
+                                <rect key="frame" x="20" y="457" width="50" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="NFt-HS-faY"/>
+                                    <constraint firstAttribute="width" constant="50" id="iIk-px-M2m"/>
+                                </constraints>
+                                <imageCell key="cell" controlSize="small" refusesFirstResponder="YES" alignment="center" animates="YES" imageAlignment="topLeft" imageScaling="proportionallyDown" image="NSApplicationIcon" id="0ZA-R2-IL6"/>
+                            </imageView>
+                            <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="apply-grid-button">
+                                <rect key="frame" x="536" y="16" width="300" height="32"/>
+                                <buttonCell key="cell" type="push" title="Apply Grid" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="apply-grid-button-cell">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <color key="bezelColor" name="AccentColor"/>
+                            </button>
+                            <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mll-tv-XeJ">
+                                <rect key="frame" x="161" y="382" width="180" height="24"/>
+                                <buttonCell key="cell" type="push" title="Save Desktop to Layout" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="cXh-Je-e3j">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <color key="bezelColor" name="AccentColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="180" id="kbW-4e-Cck"/>
+                                </constraints>
                             </button>
                         </subviews>
                         <constraints>
@@ -1025,6 +1025,8 @@
                             <constraint firstItem="apply-grid-button" firstAttribute="top" secondItem="additional-rows-stepper" secondAttribute="bottom" constant="8" id="a4V-sQ-EKN"/>
                             <constraint firstItem="grid-icon-4-bg" firstAttribute="centerX" secondItem="grid-label-4" secondAttribute="centerX" id="b7q-mH-rMp"/>
                             <constraint firstItem="additional-rows-label" firstAttribute="leading" secondItem="additional-rows-stepper" secondAttribute="trailing" constant="8" symbolic="YES" id="b9g-He-g4A"/>
+                            <constraint firstItem="background-mode-control" firstAttribute="top" secondItem="r7d-et-ARg" secondAttribute="top" constant="20" id="bg-mode-top"/>
+                            <constraint firstAttribute="trailing" secondItem="background-mode-control" secondAttribute="trailing" constant="20" id="bg-mode-trailing"/>
                             <constraint firstItem="grid-label-8" firstAttribute="leading" secondItem="grid-label-4" secondAttribute="trailing" constant="67" id="en4-AR-ns5"/>
                             <constraint firstItem="additional-rows-stepper" firstAttribute="top" secondItem="row-button-upper" secondAttribute="bottom" constant="20" symbolic="YES" id="ets-mK-SJw"/>
                             <constraint firstItem="Kah-V6-SZR" firstAttribute="leading" secondItem="gcj-t4-rut" secondAttribute="leading" id="f9T-Me-eW1"/>
@@ -1035,6 +1037,8 @@
                             <constraint firstItem="grid-icon-4-bg" firstAttribute="leading" secondItem="Kah-V6-SZR" secondAttribute="trailing" constant="58" id="ijI-QM-OQe"/>
                             <constraint firstItem="apply-grid-button" firstAttribute="top" secondItem="row-button-none" secondAttribute="bottom" constant="56" id="ke1-8j-jAQ"/>
                             <constraint firstItem="Kah-V6-SZR" firstAttribute="leading" secondItem="r7d-et-ARg" secondAttribute="leading" constant="50" id="l8C-of-lsU"/>
+                            <constraint firstItem="start-on-login-checkbox" firstAttribute="top" secondItem="background-mode-control" secondAttribute="bottom" constant="8" id="login-checkbox-top"/>
+                            <constraint firstItem="start-on-login-checkbox" firstAttribute="trailing" secondItem="r7d-et-ARg" secondAttribute="trailing" constant="20" id="login-checkbox-trailing"/>
                             <constraint firstItem="grid-label-4" firstAttribute="firstBaseline" secondItem="grid-label-8" secondAttribute="firstBaseline" id="mm8-n8-e2R"/>
                             <constraint firstItem="row-button-middle" firstAttribute="top" secondItem="grid-icon-8-bg" secondAttribute="bottom" constant="20" symbolic="YES" id="npM-YM-apG"/>
                             <constraint firstItem="row-button-upper" firstAttribute="baseline" secondItem="row-button-middle" secondAttribute="baseline" id="pn9-k2-7Yh"/>
@@ -1043,10 +1047,6 @@
                             <constraint firstItem="additional-rows-label" firstAttribute="top" secondItem="row-button-upper" secondAttribute="bottom" constant="28" id="tHS-kH-RtE"/>
                             <constraint firstItem="row-button-lower" firstAttribute="leading" secondItem="row-button-middle" secondAttribute="trailing" constant="10" id="v2i-qN-p3c"/>
                             <constraint firstItem="Kah-V6-SZR" firstAttribute="top" secondItem="mll-tv-XeJ" secondAttribute="bottom" constant="20" symbolic="YES" id="yik-am-Psl"/>
-                            <constraint firstAttribute="trailing" secondItem="background-mode-control" secondAttribute="trailing" constant="20" id="bg-mode-trailing"/>
-                            <constraint firstItem="background-mode-control" firstAttribute="top" secondItem="r7d-et-ARg" secondAttribute="top" constant="20" id="bg-mode-top"/>
-                            <constraint firstItem="start-on-login-checkbox" firstAttribute="top" secondItem="background-mode-control" secondAttribute="bottom" constant="8" id="login-checkbox-top"/>
-                            <constraint firstItem="start-on-login-checkbox" firstAttribute="trailing" secondItem="r7d-et-ARg" secondAttribute="trailing" constant="20" id="login-checkbox-trailing"/>
                         </constraints>
                     </view>
                     <connections>
@@ -1054,6 +1054,7 @@
                         <outlet property="additionalRowsStepper" destination="additional-rows-stepper" id="additional-rows-stepper-outlet"/>
                         <outlet property="applyGridButton" destination="apply-grid-button" id="apply-grid-button-outlet"/>
                         <outlet property="applyLayoutButton" destination="gcj-t4-rut" id="apply-layout-outlet"/>
+                        <outlet property="backgroundModeSegmentedControl" destination="background-mode-control" id="bg-mode-outlet"/>
                         <outlet property="deleteLayoutButton" destination="FaE-MX-YLc" id="delete-layout-outlet"/>
                         <outlet property="gridIconButton12" destination="grid-icon-12" id="grid-icon-12-outlet"/>
                         <outlet property="gridIconButton4" destination="grid-icon-4" id="grid-icon-4-outlet"/>
@@ -1065,14 +1066,13 @@
                         <outlet property="rowButtonNone" destination="row-button-none" id="row-button-none-outlet"/>
                         <outlet property="rowButtonUpper" destination="row-button-upper" id="row-button-upper-outlet"/>
                         <outlet property="saveLayoutButton" destination="mll-tv-XeJ" id="save-layout-outlet"/>
-                        <outlet property="backgroundModeSegmentedControl" destination="background-mode-control" id="bg-mode-outlet"/>
                         <outlet property="startOnLoginCheckbox" destination="start-on-login-checkbox" id="start-on-login-outlet"/>
                     </connections>
                 </viewController>
                 <customObject id="knV-ed-uG1" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <userDefaultsController representsSharedInstance="YES" id="9MS-wA-QJ0"/>
             </objects>
-            <point key="canvasLocation" x="187" y="701.5"/>
+            <point key="canvasLocation" x="1053" y="-56"/>
         </scene>
     </scenes>
     <resources>

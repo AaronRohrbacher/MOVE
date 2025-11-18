@@ -1,26 +1,12 @@
-//
-//  AppDelegate.swift
-//  MOVE
-//
-//  Created by Aaron Rohrbacher on 10/21/25.
-//
-
 import Cocoa
 import ApplicationServices
 
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
-
-    
-
-
     func applicationWillFinishLaunching(_ notification: Notification) {
-        // Disable state restoration BEFORE windows are created
         UserDefaults.standard.set(false, forKey: "NSQuitAlwaysKeepsWindows")
         UserDefaults.standard.synchronize()
         
-        // Disable persistent UI state restoration completely
-        // This prevents flushAllChanges spam
         if let persistentUIManager = NSApplication.shared.value(forKey: "persistentUIManager") as? NSObject {
             persistentUIManager.perform(Selector(("setEnabled:")), with: false)
         }
@@ -42,7 +28,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         print("AppDelegate: Requesting accessibility permissions...")
         requestAccessibilityPermissions()
         
-        // Disable state restoration on all windows to prevent flushAllChanges spam
         DispatchQueue.main.async {
             for window in NSApplication.shared.windows {
                 window.restorationClass = nil
@@ -50,19 +35,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
         
-        // Ensure the main window is shown
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            // Try to get window from storyboard
-            if let storyboard = NSStoryboard.main,
-               let windowController = storyboard.instantiateInitialController() as? NSWindowController {
-                print("AppDelegate: Found window controller from storyboard")
-                windowController.window?.restorationClass = nil
-                windowController.window?.isRestorable = false
-                windowController.showWindow(nil)
-                windowController.window?.makeKeyAndOrderFront(nil)
-                NSApp.activate(ignoringOtherApps: true)
-            } else if let window = NSApplication.shared.windows.first {
-                print("AppDelegate: Found window, making it key and ordering front")
+            if let window = NSApplication.shared.windows.first {
+                print("AppDelegate: Configuring existing window")
                 window.restorationClass = nil
                 window.isRestorable = false
                 window.makeKeyAndOrderFront(nil)
@@ -88,8 +63,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
-        // Always keep app running in background - just hide windows
-        // This allows hotkeys to continue working
         for window in NSApplication.shared.windows {
             window.orderOut(nil)
         }
@@ -97,11 +70,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
-        return false  // Disable state restoration to prevent flushAllChanges spam
+        return false
     }
     
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-        // If the app is reopened (e.g., dock click) and no windows are visible, show the main window
         if !flag {
             if let window = NSApplication.shared.windows.first {
                 window.makeKeyAndOrderFront(nil)
@@ -112,15 +84,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func applicationDidBecomeActive(_ notification: Notification) {
-        // Ensure window is visible when app becomes active
         if let window = NSApplication.shared.windows.first, !window.isVisible {
             print("AppDelegate: Window not visible, showing it")
             window.makeKeyAndOrderFront(nil)
         }
     }
-
-    // Core Data removed - app uses UserDefaults for persistence
-    // This reduces system activity and CoreAnalytics spam at launch
-
 }
 

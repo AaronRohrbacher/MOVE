@@ -15,14 +15,12 @@ else {
     exit(1)
 }
 
-// Check what's under DesktopViewSettings
 if let desktop = plist["DesktopViewSettings"] as? [String: Any] {
     print("DesktopViewSettings contains:")
     for (key, _) in desktop {
         print("  - \(key)")
     }
     
-    // Check if IconViewSettings is directly here
     if let iconView = desktop["IconViewSettings"] as? [String: Any] {
         print("\nIconViewSettings contains:")
         for (key, _) in iconView {
@@ -31,7 +29,6 @@ if let desktop = plist["DesktopViewSettings"] as? [String: Any] {
     }
 }
 
-// Try the structure without StandardViewSettings
 if let desktop = plist["DesktopViewSettings"] as? [String: Any],
    let iconView = desktop["IconViewSettings"] as? [String: Any] {
     

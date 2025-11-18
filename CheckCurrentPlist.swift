@@ -24,7 +24,6 @@ for (name, _) in positions {
     print("  - \(name)")
 }
 
-// Check what's actually on desktop
 print("\nFiles on Desktop:")
 let desktopPath = NSHomeDirectory() + "/Desktop"
 if let contents = try? FileManager.default.contentsOfDirectory(atPath: desktopPath) {

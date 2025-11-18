@@ -1,10 +1,3 @@
-//
-//  MOVEUITests.swift
-//  MOVEUITests
-//
-//  Created by Aaron Rohrbacher on 10/21/25.
-//
-
 import XCTest
 
 final class MOVEUITests: XCTestCase {
@@ -27,8 +20,6 @@ final class MOVEUITests: XCTestCase {
         app = nil
         try super.tearDownWithError()
     }
-    
-    // MARK: - Helper Methods
     
     private func saveLayoutWithName(_ name: String, includeDesktopIcons: Bool = false) {
         var saveButton = app.buttons["SaveCurrentLayoutButton"]
@@ -94,8 +85,6 @@ final class MOVEUITests: XCTestCase {
         return false
     }
     
-    // MARK: - App Launch Tests
-    
     func testAppLaunchesWithRequiredElements() throws {
         let window = app.windows["MOVE"]
         XCTAssertTrue(window.exists, "Main window should exist")
@@ -121,33 +110,25 @@ final class MOVEUITests: XCTestCase {
         XCTAssertTrue(app.tables.firstMatch.exists, "Table view should exist")
     }
     
-    // MARK: - Save Layout Tests
-    
     func testSaveLayoutCreatesEntry() throws {
-        // Save a layout
         saveLayoutWithName("Test Layout 1")
         
-        // Verify it appears in the table
         XCTAssertTrue(verifyLayoutInTable("Test Layout 1"), "Saved layout should appear in table")
     }
     
     func testSaveMultipleLayouts() throws {
-        // Save multiple layouts
         saveLayoutWithName("Layout A")
         saveLayoutWithName("Layout B")
         saveLayoutWithName("Layout C")
         
-        // Verify all appear in table
         XCTAssertTrue(verifyLayoutInTable("Layout A"), "Layout A should be in table")
         XCTAssertTrue(verifyLayoutInTable("Layout B"), "Layout B should be in table")
         XCTAssertTrue(verifyLayoutInTable("Layout C"), "Layout C should be in table")
     }
     
     func testSaveLayoutWithDesktopIcons() throws {
-        // Save layout with desktop icons enabled
         saveLayoutWithName("Desktop Icons Layout", includeDesktopIcons: true)
         
-        // Verify it appears
         XCTAssertTrue(verifyLayoutInTable("Desktop Icons Layout"), "Layout with desktop icons should be saved")
     }
     
@@ -175,101 +156,72 @@ final class MOVEUITests: XCTestCase {
         XCTAssertFalse(sheet.exists)
     }
     
-    // MARK: - Apply Layout Tests
-    
     func testApplyLayoutButtonEnabledWhenLayoutSelected() throws {
-        // Save a layout first
         saveLayoutWithName("Apply Test Layout")
         
-        // Initially Apply button might be disabled
         let applyButton = app.buttons["Apply Layout"]
         
-        // Select the layout
         XCTAssertTrue(selectLayoutInTable("Apply Test Layout"), "Should select layout")
         
-        // Apply button should be enabled (clickable)
         XCTAssertTrue(applyButton.exists)
         XCTAssertTrue(applyButton.isEnabled, "Apply button should be enabled when layout selected")
     }
     
     func testApplyLayout() throws {
-        // Save a layout
         saveLayoutWithName("Layout to Apply")
         
-        // Select it
         XCTAssertTrue(selectLayoutInTable("Layout to Apply"))
         
-        // Click Apply
         let applyButton = app.buttons["Apply Layout"]
         XCTAssertTrue(applyButton.exists)
         applyButton.click()
         
-        // App should still be running (no crash)
         XCTAssertTrue(app.exists, "App should remain running after apply")
     }
     
-    // MARK: - Delete Layout Tests
-    
     func testDeleteLayout() throws {
-        // Save two layouts
         saveLayoutWithName("Keep This Layout")
         saveLayoutWithName("Delete This Layout")
         
-        // Verify both exist
         XCTAssertTrue(verifyLayoutInTable("Keep This Layout"))
         XCTAssertTrue(verifyLayoutInTable("Delete This Layout"))
         
-        // Select the one to delete
         XCTAssertTrue(selectLayoutInTable("Delete This Layout"))
         
-        // Click Delete
         let deleteButton = app.buttons["Delete Layout"]
         XCTAssertTrue(deleteButton.exists)
         deleteButton.click()
         
-        // Verify deleted layout is gone but other remains
         XCTAssertTrue(verifyLayoutInTable("Keep This Layout"), "Kept layout should still exist")
         XCTAssertFalse(verifyLayoutInTable("Delete This Layout"), "Deleted layout should be gone")
     }
     
     func testDeleteAllLayouts() throws {
-        // Save layouts
         saveLayoutWithName("Layout 1")
         saveLayoutWithName("Layout 2")
         
-        // Delete Layout 2
         XCTAssertTrue(selectLayoutInTable("Layout 2"))
         app.buttons["Delete Layout"].click()
         
-        // Delete Layout 1
         XCTAssertTrue(selectLayoutInTable("Layout 1"))
         app.buttons["Delete Layout"].click()
         
-        // Table should be empty
         let table = app.tables.firstMatch
         let cellCount = table.cells.count
         XCTAssertEqual(cellCount, 0, "Table should be empty after deleting all layouts")
     }
     
-    // MARK: - Table View Tests
-    
     func testTableSelection() throws {
-        // Save multiple layouts
         saveLayoutWithName("First Layout")
         saveLayoutWithName("Second Layout")
         
-        // Select first
         XCTAssertTrue(selectLayoutInTable("First Layout"))
         
-        // Select second (should deselect first)
         XCTAssertTrue(selectLayoutInTable("Second Layout"))
         
-        // Both should exist but only one selected
         XCTAssertTrue(verifyLayoutInTable("First Layout"))
         XCTAssertTrue(verifyLayoutInTable("Second Layout"))
     }
-    
-    // MARK: - Desktop Icons Tests
     
     func testDesktopIconCheckboxToggle() throws {
         var saveButton = app.buttons["SaveCurrentLayoutButton"]
@@ -309,27 +261,19 @@ final class MOVEUITests: XCTestCase {
         XCTAssertFalse(sheet.exists)
     }
     
-    
-    // MARK: - Integration Tests
-    
     func testFullCRUDFlow() throws {
-        // Create
         saveLayoutWithName("CRUD Test Layout", includeDesktopIcons: true)
         XCTAssertTrue(verifyLayoutInTable("CRUD Test Layout"), "Layout should be created")
         
-        // Read (select and verify it's there)
         XCTAssertTrue(selectLayoutInTable("CRUD Test Layout"), "Should be able to select layout")
         
-        // Update (we can't directly update, but we can apply it)
         let applyButton = app.buttons["Apply Layout"]
         XCTAssertTrue(applyButton.isEnabled, "Apply button should be enabled")
         applyButton.click()
         
-        // Delete
         XCTAssertTrue(selectLayoutInTable("CRUD Test Layout"), "Should reselect for deletion")
         app.buttons["Delete Layout"].click()
         
-        // Verify deleted
         XCTAssertFalse(verifyLayoutInTable("CRUD Test Layout"), "Layout should be deleted")
     }
 }
