@@ -680,16 +680,15 @@
                 <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="738" y="-208"/>
+            <point key="canvasLocation" x="903" y="-468"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
             <objects>
                 <windowController id="B8D-0N-5wS" sceneMemberID="viewController">
-                    <window key="window" title="MOVE" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" titleVisibility="hidden" id="IQv-IB-iLA">
+                    <window key="window" title="MOVE" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" titlebarAppearsTransparent="YES" titleVisibility="hidden" id="IQv-IB-iLA">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
-                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-                        <rect key="contentRect" x="196" y="240" width="680" height="360"/>
+                        <rect key="contentRect" x="1369" y="727" width="680" height="360"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="3360" height="1859"/>
                         <connections>
                             <outlet property="delegate" destination="B8D-0N-5wS" id="98r-iN-zZc"/>
@@ -708,27 +707,30 @@
             <objects>
                 <viewController title="MOVE" storyboardIdentifier="ViewController" showSeguePresentationStyle="single" id="hIl-yz-18R" customClass="ViewController" customModule="MOVE" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" autoresizesSubviews="NO" wantsLayer="YES" id="r7d-et-ARg">
-                        <rect key="frame" x="0.0" y="0.0" width="856" height="527"/>
+                        <rect key="frame" x="0.0" y="0.0" width="856" height="519"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gcj-t4-rut">
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gcj-t4-rut">
                                 <rect key="frame" x="20" y="24" width="103" height="24"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Apply Layout" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="4g3-TG-cwu">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <color key="bezelColor" name="AccentColor"/>
                             </button>
-                            <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FaE-MX-YLc">
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FaE-MX-YLc">
                                 <rect key="frame" x="374" y="24" width="108" height="24"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Delete Layout" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="LAi-Vb-UBQ">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <color key="bezelColor" name="systemRedColor" catalog="System" colorSpace="catalog"/>
                             </button>
-                            <scrollView misplaced="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" scrollerKnobStyle="dark" translatesAutoresizingMaskIntoConstraints="NO" id="Kah-V6-SZR">
+                            <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" scrollerKnobStyle="dark" translatesAutoresizingMaskIntoConstraints="NO" id="Kah-V6-SZR">
                                 <rect key="frame" x="20" y="56" width="462" height="319"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <clipView key="contentView" autoresizesSubviews="NO" drawsBackground="NO" id="O3T-Vc-dwl">
                                     <rect key="frame" x="1" y="1" width="460" height="317"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -773,281 +775,227 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
-                            <customView misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="grid-icon-8-bg">
-                                <rect key="frame" x="654" y="178" width="55" height="55"/>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mll-tv-XeJ">
+                                <rect key="frame" x="161" y="385" width="180" height="24"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" title="Save Desktop to Layout" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="cXh-Je-e3j">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <color key="bezelColor" name="AccentColor"/>
+                            </button>
+                            <box fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Uxb-op-NiK">
+                                <rect key="frame" x="0.0" y="451" width="856" height="84"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <view key="contentView" id="TAZ-8B-rp8">
+                                    <rect key="frame" x="0.0" y="0.0" width="856" height="72"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <imageView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LAX-i3-BI2">
+                                            <rect key="frame" x="8" y="6" width="69" height="59"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <imageCell key="cell" controlSize="small" refusesFirstResponder="YES" alignment="center" animates="YES" imageAlignment="topLeft" imageScaling="proportionallyDown" image="NSApplicationIcon" id="0ZA-R2-IL6"/>
+                                        </imageView>
+                                        <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="r9h-0X-Pf4">
+                                            <rect key="frame" x="83" y="48" width="280" height="17"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" controlSize="large" lineBreakMode="truncatingTail" allowsEditingTextAttributes="YES" id="hDQ-yo-szC">
+                                                <font key="font" size="14" name="Phosphate-Inline"/>
+                                                <string key="title">Macintosh Orchestrator of Visual Ease
+</string>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5rI-8q-6eb">
+                                            <rect key="frame" x="355" y="48" width="28" height="14"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" title="v0.1" id="VQd-lf-yem">
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6Xx-u0-myh">
+                                            <rect key="frame" x="83" y="6" width="266" height="14"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" title="https://github.com/AaronRohrbacher/MOVE" id="X9k-LE-iMl">
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="background-mode-control">
+                                            <rect key="frame" x="706" y="37" width="150" height="24"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <segmentedCell key="cell" controlSize="mini" borderStyle="border" alignment="left" style="automatic" trackingMode="selectOne" id="background-mode-cell">
+                                                <segments>
+                                                    <segment label="Dock"/>
+                                                    <segment label="Menu Bar"/>
+                                                </segments>
+                                            </segmentedCell>
+                                            <connections>
+                                                <action selector="backgroundModeChanged:" target="hIl-yz-18R" id="bg-mode-action"/>
+                                            </connections>
+                                        </segmentedControl>
+                                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="start-on-login-checkbox">
+                                            <rect key="frame" x="727" y="5" width="120" height="18"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="bevel" title="Start on Login" bezelStyle="rounded" alignment="left" controlSize="small" state="on" id="start-on-login-cell">
+                                                <behavior key="behavior" changeContents="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="smallSystem"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="startOnLoginChanged:" target="hIl-yz-18R" id="start-on-login-action"/>
+                                            </connections>
+                                        </button>
+                                        <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pxG-dK-T4S">
+                                            <rect key="frame" x="83" y="26" width="296" height="14"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" title="Free (as in freedom) and open source software, forever." id="Tpc-pC-Cd0">
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                    </subviews>
+                                </view>
+                            </box>
+                            <box fixedFrame="YES" title="Gridify" translatesAutoresizingMaskIntoConstraints="NO" id="jci-ag-Owh">
+                                <rect key="frame" x="514" y="13" width="322" height="248"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <view key="contentView" id="KBg-Q2-npM">
+                                    <rect key="frame" x="0.0" y="0.0" width="322" height="236"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="apply-grid-button">
+                                            <rect key="frame" x="11" y="8" width="300" height="32"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="push" title="Apply Grid" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="apply-grid-button-cell">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <color key="bezelColor" name="AccentColor"/>
+                                        </button>
+                                    </subviews>
+                                </view>
+                            </box>
+                            <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="grid-icon-8-bg">
+                                <rect key="frame" x="648" y="185" width="55" height="55"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
-                                    <button wantsLayer="YES" tag="8" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="grid-icon-8">
+                                    <button wantsLayer="YES" tag="8" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="grid-icon-8">
                                         <rect key="frame" x="0.0" y="0.0" width="55" height="55"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="bevel" bezelStyle="rounded" id="grid-icon-8-cell">
                                             <behavior key="behavior" changeContents="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="55" id="grid-icon-8-height"/>
-                                            <constraint firstAttribute="width" constant="55" id="grid-icon-8-width"/>
-                                        </constraints>
                                     </button>
                                 </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="55" id="grid-icon-8-bg-height"/>
-                                    <constraint firstAttribute="width" constant="55" id="grid-icon-8-bg-width"/>
-                                    <constraint firstAttribute="bottom" secondItem="grid-icon-8" secondAttribute="bottom" id="grid-icon-8-bottom"/>
-                                    <constraint firstItem="grid-icon-8" firstAttribute="leading" secondItem="grid-icon-8-bg" secondAttribute="leading" id="grid-icon-8-leading"/>
-                                    <constraint firstItem="grid-icon-8" firstAttribute="top" secondItem="grid-icon-8-bg" secondAttribute="top" id="grid-icon-8-top"/>
-                                    <constraint firstAttribute="trailing" secondItem="grid-icon-8" secondAttribute="trailing" id="grid-icon-8-trailing"/>
-                                </constraints>
                             </customView>
-                            <customView misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="grid-icon-12-bg">
-                                <rect key="frame" x="771" y="178" width="55" height="55"/>
+                            <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="grid-icon-12-bg">
+                                <rect key="frame" x="765" y="185" width="55" height="55"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
-                                    <button wantsLayer="YES" tag="12" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="grid-icon-12">
+                                    <button wantsLayer="YES" tag="12" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="grid-icon-12">
                                         <rect key="frame" x="0.0" y="0.0" width="55" height="55"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="bevel" bezelStyle="rounded" id="grid-icon-12-cell">
                                             <behavior key="behavior" changeContents="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="55" id="grid-icon-12-height"/>
-                                            <constraint firstAttribute="width" constant="55" id="grid-icon-12-width"/>
-                                        </constraints>
                                     </button>
                                 </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="55" id="grid-icon-12-bg-height"/>
-                                    <constraint firstAttribute="width" constant="55" id="grid-icon-12-bg-width"/>
-                                    <constraint firstAttribute="bottom" secondItem="grid-icon-12" secondAttribute="bottom" id="grid-icon-12-bottom"/>
-                                    <constraint firstItem="grid-icon-12" firstAttribute="leading" secondItem="grid-icon-12-bg" secondAttribute="leading" id="grid-icon-12-leading"/>
-                                    <constraint firstItem="grid-icon-12" firstAttribute="top" secondItem="grid-icon-12-bg" secondAttribute="top" id="grid-icon-12-top"/>
-                                    <constraint firstAttribute="trailing" secondItem="grid-icon-12" secondAttribute="trailing" id="grid-icon-12-trailing"/>
-                                </constraints>
                             </customView>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="grid-label-4">
-                                <rect key="frame" x="536" y="162" width="55" height="16"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="51" id="veN-re-9lS"/>
-                                </constraints>
-                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="4" id="grid-label-4-cell">
+                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="grid-label-4">
+                                <rect key="frame" x="530" y="169" width="55" height="16"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="1/4" id="grid-label-4-cell">
                                     <font key="font" metaFont="smallSystem"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="grid-label-8">
-                                <rect key="frame" x="654" y="162" width="55" height="16"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="51" id="w6C-5T-Ow9"/>
-                                </constraints>
-                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="8" id="grid-label-8-cell">
+                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="grid-label-8">
+                                <rect key="frame" x="648" y="169" width="55" height="16"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="1/8" id="grid-label-8-cell">
                                     <font key="font" metaFont="smallSystem"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="grid-label-12">
-                                <rect key="frame" x="771" y="162" width="55" height="16"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="51" id="JyV-6X-il8"/>
-                                </constraints>
-                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="12" id="grid-label-12-cell">
+                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="grid-label-12">
+                                <rect key="frame" x="765" y="169" width="55" height="16"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="1/12" id="grid-label-12-cell">
                                     <font key="font" metaFont="smallSystem"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="row-button-upper">
-                                <rect key="frame" x="536" y="118" width="65" height="24"/>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="row-button-upper">
+                                <rect key="frame" x="530" y="125" width="65" height="24"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Upper" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="row-button-upper-cell">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="65" id="t3x-Rc-xLe"/>
-                                </constraints>
                             </button>
-                            <button tag="1" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="row-button-middle">
-                                <rect key="frame" x="611" y="118" width="65" height="24"/>
+                            <button tag="1" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="row-button-middle">
+                                <rect key="frame" x="605" y="125" width="65" height="24"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Middle" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="row-button-middle-cell">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="65" id="0cR-Sc-erd"/>
-                                </constraints>
                             </button>
-                            <button tag="2" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="row-button-lower">
-                                <rect key="frame" x="686" y="118" width="65" height="24"/>
+                            <button tag="2" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="row-button-lower">
+                                <rect key="frame" x="680" y="125" width="65" height="24"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Lower" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="row-button-lower-cell">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="65" id="xgU-96-AhA"/>
-                                </constraints>
                             </button>
-                            <button tag="3" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="row-button-none">
-                                <rect key="frame" x="761" y="118" width="65" height="24"/>
+                            <button tag="3" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="row-button-none">
+                                <rect key="frame" x="755" y="125" width="65" height="24"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="None" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="row-button-none-cell">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                             </button>
-                            <stepper misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="additional-rows-stepper">
-                                <rect key="frame" x="536" y="70" width="19" height="28"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="19" id="ixl-1C-K6Q"/>
-                                </constraints>
+                            <stepper fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="additional-rows-stepper">
+                                <rect key="frame" x="530" y="76" width="19" height="28"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <stepperCell key="cell" baseWritingDirection="leftToRight" alignment="left" increment="0.0" autorepeat="NO"/>
                             </stepper>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="additional-rows-label">
-                                <rect key="frame" x="561" y="73" width="200" height="17"/>
+                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="additional-rows-label">
+                                <rect key="frame" x="552" y="77" width="200" height="17"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="No additional rows" id="additional-rows-label-cell">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <customView misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="grid-icon-4-bg">
-                                <rect key="frame" x="536" y="178" width="55" height="55"/>
+                            <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="grid-icon-4-bg">
+                                <rect key="frame" x="530" y="185" width="55" height="55"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
-                                    <button wantsLayer="YES" tag="4" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="grid-icon-4">
+                                    <button wantsLayer="YES" tag="4" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="grid-icon-4">
                                         <rect key="frame" x="0.0" y="0.0" width="55" height="55"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="bevel" bezelStyle="rounded" id="grid-icon-4-cell">
                                             <behavior key="behavior" changeContents="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="55" id="grid-icon-4-height"/>
-                                            <constraint firstAttribute="width" constant="55" id="grid-icon-4-width"/>
-                                        </constraints>
                                     </button>
                                 </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="55" id="grid-icon-4-bg-height"/>
-                                    <constraint firstAttribute="width" constant="55" id="grid-icon-4-bg-width"/>
-                                    <constraint firstAttribute="bottom" secondItem="grid-icon-4" secondAttribute="bottom" id="grid-icon-4-bottom"/>
-                                    <constraint firstItem="grid-icon-4" firstAttribute="leading" secondItem="grid-icon-4-bg" secondAttribute="leading" id="grid-icon-4-leading"/>
-                                    <constraint firstItem="grid-icon-4" firstAttribute="top" secondItem="grid-icon-4-bg" secondAttribute="top" id="grid-icon-4-top"/>
-                                    <constraint firstAttribute="trailing" secondItem="grid-icon-4" secondAttribute="trailing" id="grid-icon-4-trailing"/>
-                                </constraints>
                             </customView>
-                            <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="background-mode-control">
-                                <rect key="frame" x="686" y="483" width="150" height="24"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="24" id="bg-mode-height"/>
-                                    <constraint firstAttribute="width" constant="150" id="bg-mode-width"/>
-                                </constraints>
-                                <segmentedCell key="cell" borderStyle="border" alignment="left" style="automatic" trackingMode="selectOne" id="background-mode-cell">
-                                    <segments>
-                                        <segment label="Dock"/>
-                                        <segment label="Menu Bar"/>
-                                    </segments>
-                                </segmentedCell>
-                                <connections>
-                                    <action selector="backgroundModeChanged:" target="hIl-yz-18R" id="bg-mode-action"/>
-                                </connections>
-                            </segmentedControl>
-                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="start-on-login-checkbox">
-                                <rect key="frame" x="756" y="457" width="120" height="18"/>
-                                <buttonCell key="cell" type="bevel" title="Start on Login" bezelStyle="rounded" alignment="left" controlSize="small" state="on" id="start-on-login-cell">
-                                    <behavior key="behavior" changeContents="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="smallSystem"/>
-                                </buttonCell>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="18" id="login-checkbox-height"/>
-                                    <constraint firstAttribute="width" constant="120" id="login-checkbox-width"/>
-                                </constraints>
-                                <connections>
-                                    <action selector="startOnLoginChanged:" target="hIl-yz-18R" id="start-on-login-action"/>
-                                </connections>
-                            </button>
-                            <imageView translatesAutoresizingMaskIntoConstraints="NO" id="LAX-i3-BI2">
-                                <rect key="frame" x="20" y="457" width="50" height="50"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="NFt-HS-faY"/>
-                                    <constraint firstAttribute="width" constant="50" id="iIk-px-M2m"/>
-                                </constraints>
-                                <imageCell key="cell" controlSize="small" refusesFirstResponder="YES" alignment="center" animates="YES" imageAlignment="topLeft" imageScaling="proportionallyDown" image="NSApplicationIcon" id="0ZA-R2-IL6"/>
-                            </imageView>
-                            <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="apply-grid-button">
-                                <rect key="frame" x="536" y="16" width="300" height="32"/>
-                                <buttonCell key="cell" type="push" title="Apply Grid" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="apply-grid-button-cell">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                                <color key="bezelColor" name="AccentColor"/>
-                            </button>
-                            <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mll-tv-XeJ">
-                                <rect key="frame" x="161" y="382" width="180" height="24"/>
-                                <buttonCell key="cell" type="push" title="Save Desktop to Layout" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="cXh-Je-e3j">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                                <color key="bezelColor" name="AccentColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="180" id="kbW-4e-Cck"/>
-                                </constraints>
-                            </button>
                         </subviews>
-                        <constraints>
-                            <constraint firstItem="mll-tv-XeJ" firstAttribute="top" secondItem="r7d-et-ARg" secondAttribute="top" constant="104" id="18q-xd-cxE"/>
-                            <constraint firstItem="row-button-middle" firstAttribute="baseline" secondItem="row-button-lower" secondAttribute="baseline" id="1Ys-BF-1ib"/>
-                            <constraint firstItem="grid-label-4" firstAttribute="top" secondItem="grid-icon-4-bg" secondAttribute="bottom" id="3fS-dW-IVA"/>
-                            <constraint firstItem="grid-label-4" firstAttribute="baseline" secondItem="grid-label-8" secondAttribute="baseline" id="3nC-T7-oFo"/>
-                            <constraint firstItem="Kah-V6-SZR" firstAttribute="bottom" secondItem="additional-rows-stepper" secondAttribute="bottom" id="6FD-Dv-0jW"/>
-                            <constraint firstItem="grid-label-8" firstAttribute="baseline" secondItem="grid-label-12" secondAttribute="baseline" id="6sE-Gb-IDq"/>
-                            <constraint firstItem="grid-label-12" firstAttribute="leading" secondItem="grid-label-8" secondAttribute="trailing" constant="66" id="70s-A8-Q3a"/>
-                            <constraint firstAttribute="trailing" secondItem="apply-grid-button" secondAttribute="trailing" constant="22" id="84D-gp-Uly"/>
-                            <constraint firstItem="grid-icon-12-bg" firstAttribute="trailing" secondItem="row-button-none" secondAttribute="trailing" id="8bT-jN-BMo"/>
-                            <constraint firstItem="LAX-i3-BI2" firstAttribute="leading" secondItem="r7d-et-ARg" secondAttribute="leading" constant="20" symbolic="YES" id="8l1-tK-WLc"/>
-                            <constraint firstItem="mll-tv-XeJ" firstAttribute="leading" secondItem="r7d-et-ARg" secondAttribute="leading" constant="135" id="9v0-T8-kJz"/>
-                            <constraint firstItem="Kah-V6-SZR" firstAttribute="trailing" secondItem="FaE-MX-YLc" secondAttribute="trailing" id="AHs-bU-pmt"/>
-                            <constraint firstItem="grid-icon-4-bg" firstAttribute="top" secondItem="grid-icon-8-bg" secondAttribute="top" id="Ahc-Ll-4fo"/>
-                            <constraint firstItem="apply-grid-button" firstAttribute="top" secondItem="additional-rows-label" secondAttribute="bottom" constant="11" id="ApZ-EV-nbo"/>
-                            <constraint firstItem="additional-rows-stepper" firstAttribute="leading" secondItem="apply-grid-button" secondAttribute="leading" id="Aub-b0-XcO"/>
-                            <constraint firstItem="grid-icon-8-bg" firstAttribute="leading" secondItem="grid-icon-4-bg" secondAttribute="trailing" constant="63" id="BUH-au-D1v"/>
-                            <constraint firstAttribute="trailing" secondItem="additional-rows-label" secondAttribute="trailing" constant="99" id="Bp4-cn-RMJ"/>
-                            <constraint firstAttribute="bottom" secondItem="apply-grid-button" secondAttribute="bottom" constant="24" id="CBu-2N-gsx"/>
-                            <constraint firstItem="grid-icon-8-bg" firstAttribute="centerX" secondItem="grid-label-8" secondAttribute="centerX" id="Ccn-a2-qgG"/>
-                            <constraint firstItem="grid-label-4" firstAttribute="leading" secondItem="Kah-V6-SZR" secondAttribute="trailing" constant="60" id="DE0-2K-4yX"/>
-                            <constraint firstItem="grid-icon-8-bg" firstAttribute="top" secondItem="grid-icon-12-bg" secondAttribute="top" id="De3-vq-mYc"/>
-                            <constraint firstItem="gcj-t4-rut" firstAttribute="top" secondItem="Kah-V6-SZR" secondAttribute="bottom" constant="12" id="De8-1n-cpk"/>
-                            <constraint firstItem="LAX-i3-BI2" firstAttribute="top" secondItem="r7d-et-ARg" secondAttribute="top" constant="20" symbolic="YES" id="Djf-B4-FHt"/>
-                            <constraint firstItem="row-button-none" firstAttribute="top" secondItem="grid-icon-12-bg" secondAttribute="bottom" constant="20" symbolic="YES" id="FXR-5f-dh7"/>
-                            <constraint firstItem="grid-icon-4-bg" firstAttribute="leading" secondItem="row-button-upper" secondAttribute="leading" id="JGD-Lu-ElN"/>
-                            <constraint firstItem="gcj-t4-rut" firstAttribute="baseline" secondItem="FaE-MX-YLc" secondAttribute="firstBaseline" id="JLr-v3-2Vq"/>
-                            <constraint firstItem="FaE-MX-YLc" firstAttribute="centerY" secondItem="apply-grid-button" secondAttribute="centerY" id="PFr-bi-0Uy"/>
-                            <constraint firstItem="grid-icon-4-bg" firstAttribute="top" secondItem="r7d-et-ARg" secondAttribute="top" constant="316" id="QKk-nd-sk5"/>
-                            <constraint firstItem="row-button-none" firstAttribute="leading" secondItem="row-button-lower" secondAttribute="trailing" constant="10" id="TTI-zv-nHP"/>
-                            <constraint firstAttribute="trailing" secondItem="grid-icon-12-bg" secondAttribute="trailing" constant="32" id="U7N-sa-buo"/>
-                            <constraint firstItem="row-button-middle" firstAttribute="leading" secondItem="row-button-upper" secondAttribute="trailing" constant="10" id="Uec-aV-hQd"/>
-                            <constraint firstItem="grid-icon-12-bg" firstAttribute="leading" secondItem="grid-icon-8-bg" secondAttribute="trailing" constant="62" id="XVd-ej-27l"/>
-                            <constraint firstItem="grid-icon-12-bg" firstAttribute="centerX" secondItem="grid-label-12" secondAttribute="centerX" id="YS6-Ap-ZSl"/>
-                            <constraint firstItem="apply-grid-button" firstAttribute="top" secondItem="additional-rows-stepper" secondAttribute="bottom" constant="8" id="a4V-sQ-EKN"/>
-                            <constraint firstItem="grid-icon-4-bg" firstAttribute="centerX" secondItem="grid-label-4" secondAttribute="centerX" id="b7q-mH-rMp"/>
-                            <constraint firstItem="additional-rows-label" firstAttribute="leading" secondItem="additional-rows-stepper" secondAttribute="trailing" constant="8" symbolic="YES" id="b9g-He-g4A"/>
-                            <constraint firstItem="background-mode-control" firstAttribute="top" secondItem="r7d-et-ARg" secondAttribute="top" constant="20" id="bg-mode-top"/>
-                            <constraint firstAttribute="trailing" secondItem="background-mode-control" secondAttribute="trailing" constant="20" id="bg-mode-trailing"/>
-                            <constraint firstItem="grid-label-8" firstAttribute="leading" secondItem="grid-label-4" secondAttribute="trailing" constant="67" id="en4-AR-ns5"/>
-                            <constraint firstItem="additional-rows-stepper" firstAttribute="top" secondItem="row-button-upper" secondAttribute="bottom" constant="20" symbolic="YES" id="ets-mK-SJw"/>
-                            <constraint firstItem="Kah-V6-SZR" firstAttribute="leading" secondItem="gcj-t4-rut" secondAttribute="leading" id="f9T-Me-eW1"/>
-                            <constraint firstItem="row-button-upper" firstAttribute="top" secondItem="grid-label-4" secondAttribute="bottom" constant="4" id="fEb-As-jtB"/>
-                            <constraint firstItem="row-button-lower" firstAttribute="baseline" secondItem="row-button-none" secondAttribute="baseline" id="fsK-X1-9bK"/>
-                            <constraint firstItem="row-button-upper" firstAttribute="leading" secondItem="additional-rows-stepper" secondAttribute="leading" id="gSu-Zl-Clb"/>
-                            <constraint firstItem="FaE-MX-YLc" firstAttribute="baseline" secondItem="gcj-t4-rut" secondAttribute="firstBaseline" id="h8K-7K-kdZ"/>
-                            <constraint firstItem="grid-icon-4-bg" firstAttribute="leading" secondItem="Kah-V6-SZR" secondAttribute="trailing" constant="58" id="ijI-QM-OQe"/>
-                            <constraint firstItem="apply-grid-button" firstAttribute="top" secondItem="row-button-none" secondAttribute="bottom" constant="56" id="ke1-8j-jAQ"/>
-                            <constraint firstItem="Kah-V6-SZR" firstAttribute="leading" secondItem="r7d-et-ARg" secondAttribute="leading" constant="50" id="l8C-of-lsU"/>
-                            <constraint firstItem="start-on-login-checkbox" firstAttribute="top" secondItem="background-mode-control" secondAttribute="bottom" constant="8" id="login-checkbox-top"/>
-                            <constraint firstItem="start-on-login-checkbox" firstAttribute="trailing" secondItem="r7d-et-ARg" secondAttribute="trailing" constant="20" id="login-checkbox-trailing"/>
-                            <constraint firstItem="grid-label-4" firstAttribute="firstBaseline" secondItem="grid-label-8" secondAttribute="firstBaseline" id="mm8-n8-e2R"/>
-                            <constraint firstItem="row-button-middle" firstAttribute="top" secondItem="grid-icon-8-bg" secondAttribute="bottom" constant="20" symbolic="YES" id="npM-YM-apG"/>
-                            <constraint firstItem="row-button-upper" firstAttribute="baseline" secondItem="row-button-middle" secondAttribute="baseline" id="pn9-k2-7Yh"/>
-                            <constraint firstItem="grid-label-8" firstAttribute="firstBaseline" secondItem="grid-label-12" secondAttribute="firstBaseline" id="poY-Ar-gjj"/>
-                            <constraint firstItem="row-button-upper" firstAttribute="top" secondItem="grid-icon-4-bg" secondAttribute="bottom" constant="20" symbolic="YES" id="qcy-Th-GeK"/>
-                            <constraint firstItem="additional-rows-label" firstAttribute="top" secondItem="row-button-upper" secondAttribute="bottom" constant="28" id="tHS-kH-RtE"/>
-                            <constraint firstItem="row-button-lower" firstAttribute="leading" secondItem="row-button-middle" secondAttribute="trailing" constant="10" id="v2i-qN-p3c"/>
-                            <constraint firstItem="Kah-V6-SZR" firstAttribute="top" secondItem="mll-tv-XeJ" secondAttribute="bottom" constant="20" symbolic="YES" id="yik-am-Psl"/>
-                        </constraints>
                     </view>
                     <connections>
                         <outlet property="additionalRowsLabel" destination="additional-rows-label" id="additional-rows-label-outlet"/>
@@ -1072,7 +1020,7 @@
                 <customObject id="knV-ed-uG1" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <userDefaultsController representsSharedInstance="YES" id="9MS-wA-QJ0"/>
             </objects>
-            <point key="canvasLocation" x="1053" y="-56"/>
+            <point key="canvasLocation" x="1053" y="-56.5"/>
         </scene>
     </scenes>
     <resources>

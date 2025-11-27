@@ -274,11 +274,23 @@ class GridController: NSViewController {
     private func calculateGridLayout() -> (rows: Int, cols: Int) {
         switch selectedRowPosition {
         case .upper, .middle, .lower:
-            return (rows: 1, cols: min(4, totalWindows))
+            return (rows: 1, cols: min(totalWindows, 6))
         case .none:
-            let totalRows = 3 + additionalRows
-            let windowsPerRow = max(1, totalWindows / totalRows)
-            return (rows: totalRows, cols: windowsPerRow)
+            let baseRows: Int
+            switch totalWindows {
+            case 4:
+                baseRows = 2
+            case 8:
+                baseRows = 2
+            case 12:
+                baseRows = 3
+            default:
+                baseRows = Int(sqrt(Double(totalWindows)).rounded(.up))
+            }
+            
+            let totalRows = baseRows + additionalRows
+            let cols = Int(ceil(Double(totalWindows) / Double(totalRows)))
+            return (rows: totalRows, cols: max(1, cols))
         }
     }
     
