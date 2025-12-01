@@ -111,23 +111,14 @@ extension Collection {
 
 extension ViewController {
     @objc func saveLayout() {
-        showSaveLayoutPopup { [weak self] name, includeDesktopIcons in
+        showSaveLayoutPopup { [weak self] name in
             guard let self = self, !name.isEmpty else { return }
 
-            var windows = WindowCapture.captureCurrentLayout()
-
-            var capturedDesktopIcons: [DesktopIconInfo] = []
-            if includeDesktopIcons {
-                let extraction = self.extractDesktopIconsAndFilter(from: windows)
-                capturedDesktopIcons = extraction.icons
-                windows = extraction.filteredWindows
-            }
+            let windows = WindowCapture.captureCurrentLayout()
 
             let layout = LayoutData(
                 name: name,
                 windows: windows,
-                desktopIcons: capturedDesktopIcons.isEmpty ? nil : capturedDesktopIcons,
-                includeDesktopIcons: includeDesktopIcons,
                 dateCreated: Date()
             )
 

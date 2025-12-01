@@ -43,6 +43,21 @@ Coming Soon to the Mac App Store, in the Releases section here, or grab the sour
 ## Who the F&@# are you!?
 I'm Aaron Rohrbacher. Hi there. I'm a principal-level DevOps and full-stack software engineer, specializing in digging applications out of the weirdest, most deprecated, unreadable, and seemingly impossible trenches you'll ever come across. I didn't necessarily pick that path myself - I provided one too many creative solutions to bring GOOD CODE that has simply been (often criminally and offensively) neglected back to life. It's provided me a career that I truly love... once I figure it out, anyway. I thrive on collaboration and community learning. I get weird and likely unhealthy thrills out of making old code, frameworks, etc. work in new language-agnostic ways. I also play the saxophone. Good day, then.
 
+## Privacy Policy
+
+MOVE does not collect, store, or transmit any user data. All operations are performed locally on your device.
+
+**Permissions Requested:**
+- **Accessibility**: Required to save and restore window positions. MOVE uses the Accessibility API to programmatically move and resize windows, as macOS does not provide a public API for this functionality.
+
+**Data Collection:**
+- None. MOVE does not collect, store, or share any personal information, usage data, or system information.
+- All saved layouts are stored locally on your device.
+- No network connections are made.
+- No telemetry or analytics are collected.
+
+This is free and open source software (FOSS). You can review the source code to verify these claims.
+
 ## License
 
 GPL v2. Let's bring free (as in freedom) and open source consumer software BACK to MacOS.

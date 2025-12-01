@@ -62,40 +62,18 @@ extension ViewController {
         }
     }
 
-    func showSaveLayoutPopup(completion: @escaping (String, Bool) -> Void) {
+    func showSaveLayoutPopup(completion: @escaping (String) -> Void) {
         let alert = NSAlert()
         alert.messageText = "Save Layout"
         alert.informativeText = "Enter a name for this layout:"
         alert.alertStyle = .informational
 
-        let nameField = NSTextField(frame: NSRect(x: 0, y: 24, width: 220, height: 24))
+        let nameField = NSTextField(frame: NSRect(x: 0, y: 0, width: 220, height: 24))
         nameField.placeholderString = "Layout name"
         nameField.stringValue = "Layout \(savedLayouts.count + 1)"
         nameField.setAccessibilityIdentifier("SaveLayoutNameField")
 
-        let checkbox = NSButton(checkboxWithTitle: "Include desktop icons (not available in macOS 26)", target: nil, action: nil)
-        checkbox.frame = NSRect(x: 0, y: 0, width: 220, height: 20)
-        checkbox.state = .off
-        checkbox.isEnabled = false
-        checkbox.setAccessibilityIdentifier("SaveLayoutCheckbox")
-        
-        let attributedTitle = NSAttributedString(
-            string: "Include desktop icons (not available in macOS 26)",
-            attributes: [.foregroundColor: NSColor.disabledControlTextColor]
-        )
-        checkbox.attributedTitle = attributedTitle
-
-        let container = NSView(frame: NSRect(x: 0, y: 0, width: 220, height: 48))
-        container.addSubview(nameField)
-        container.addSubview(checkbox)
-        
-        DispatchQueue.main.async {
-            checkbox.isEnabled = false
-            if let cell = checkbox.cell as? NSButtonCell {
-                cell.isEnabled = false
-            }
-        }
-        alert.accessoryView = container
+        alert.accessoryView = nameField
 
         _ = alert.addButton(withTitle: "Save")
         alert.addButton(withTitle: "Cancel")
@@ -117,9 +95,8 @@ extension ViewController {
         alert.beginSheetModal(for: window) { response in
             if response == NSApplication.ModalResponse.alertFirstButtonReturn {
                 let name = nameField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
-                let includeDesktopIcons = checkbox.state == .on
                 DispatchQueue.main.async {
-                    completion(name, includeDesktopIcons)
+                    completion(name)
                 }
             }
         }

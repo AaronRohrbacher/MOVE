@@ -335,8 +335,6 @@ class GridController: NSViewController {
         let gridLayout = LayoutData(
             name: "Grid Layout",
             windows: gridWindows,
-            desktopIcons: nil,
-            includeDesktopIcons: false,
             dateCreated: Date()
         )
         

@@ -2,7 +2,7 @@ import Cocoa
 import ApplicationServices
 
 @main
-class AppDelegate: NSObject, NSApplicationDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     func applicationWillFinishLaunching(_ notification: Notification) {
         UserDefaults.standard.set(false, forKey: "NSQuitAlwaysKeepsWindows")
         UserDefaults.standard.synchronize()
@@ -32,6 +32,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             for window in NSApplication.shared.windows {
                 window.restorationClass = nil
                 window.isRestorable = false
+                window.delegate = self
             }
         }
         
@@ -40,11 +41,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 print("AppDelegate: Configuring existing window")
                 window.restorationClass = nil
                 window.isRestorable = false
+                window.delegate = self
                 window.makeKeyAndOrderFront(nil)
                 NSApp.activate(ignoringOtherApps: true)
             } else {
                 print("AppDelegate: No windows found")
             }
+            self.setupWindowMenu()
         }
         
         print("AppDelegate: applicationDidFinishLaunching completed")
@@ -89,5 +92,45 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             window.makeKeyAndOrderFront(nil)
         }
     }
+    
+    private func setupWindowMenu() {
+        guard let windowMenu = NSApp.mainMenu?.item(withTitle: "Window")?.submenu else {
+            return
+        }
+        
+        let existingItem = windowMenu.items.first { $0.action == #selector(showMainWindow) }
+        if existingItem != nil {
+            return
+        }
+        
+        var insertIndex = windowMenu.numberOfItems
+        if let bringAllIndex = windowMenu.items.firstIndex(where: { $0.title == "Bring All to Front" }) {
+            insertIndex = bringAllIndex + 1
+        }
+        
+        if insertIndex < windowMenu.numberOfItems {
+            let itemAtInsert = windowMenu.items[insertIndex]
+            if !itemAtInsert.isSeparatorItem {
+                windowMenu.insertItem(NSMenuItem.separator(), at: insertIndex)
+                insertIndex += 1
+            }
+        } else {
+            windowMenu.addItem(NSMenuItem.separator())
+            insertIndex = windowMenu.numberOfItems
+        }
+        
+        let showWindowItem = NSMenuItem(title: "MOVE", action: #selector(showMainWindow), keyEquivalent: "")
+        showWindowItem.target = self
+        windowMenu.insertItem(showWindowItem, at: insertIndex)
+    }
+    
+    @objc private func showMainWindow() {
+        if let window = NSApplication.shared.windows.first {
+            window.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
+        }
+    }
+    
+    // MARK: - NSWindowDelegate
 }
 

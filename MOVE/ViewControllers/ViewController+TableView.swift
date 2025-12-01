@@ -18,18 +18,11 @@ extension ViewController: NSTableViewDelegate {
 
         if tableColumn?.identifier.rawValue == "layoutName" {
             if let cellView = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier("LayoutCell"), owner: self) as? LayoutTableCellView {
-                let iconIndicator = layout.includeDesktopIcons ? "🖥️ " : ""
                 let windowCount = layout.windows.count
-                let iconCount = layout.desktopIcons?.count ?? 0
-
-                var infoParts = ["\(windowCount) window\(windowCount == 1 ? "" : "s")"]
-                if iconCount > 0 {
-                    infoParts.append("\(iconCount) icon\(iconCount == 1 ? "" : "s")")
-                }
 
                 cellView.configure(
-                    title: "\(iconIndicator)\(layout.name)",
-                    info: infoParts.joined(separator: ", ")
+                    title: layout.name,
+                    info: "\(windowCount) window\(windowCount == 1 ? "" : "s")"
                 )
 
                 return cellView
@@ -63,18 +56,10 @@ extension ViewController: NSTableViewDelegate {
                 infoField.bottomAnchor.constraint(lessThanOrEqualTo: cellView.bottomAnchor, constant: -6)
             ])
 
-            let iconIndicator = layout.includeDesktopIcons ? "🖥️ " : ""
             let windowCount = layout.windows.count
-            let iconCount = layout.desktopIcons?.count ?? 0
 
-            titleField.stringValue = "\(iconIndicator)\(layout.name)"
-
-            var infoParts = ["\(windowCount) window\(windowCount == 1 ? "" : "s")"]
-            if iconCount > 0 {
-                infoParts.append("\(iconCount) icon\(iconCount == 1 ? "" : "s")")
-            }
-
-            infoField.stringValue = infoParts.joined(separator: ", ")
+            titleField.stringValue = layout.name
+            infoField.stringValue = "\(windowCount) window\(windowCount == 1 ? "" : "s")"
 
             return cellView
         } else if tableColumn?.identifier.rawValue == "hotkey" {
